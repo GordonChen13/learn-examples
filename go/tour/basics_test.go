@@ -32,4 +32,9 @@ func TestForSum(t *testing.T) {
 	ForSum(x)
 }
 
+func TestLoopSqrt(t *testing.T) {
+	x := 10.0
+	y := 100
+	LoopSqrt(x, y)
 
+}

@@ -27,3 +27,12 @@ func ForSum(x int) int {
 	fmt.Println(sum)
 	return sum
 }
+
+func LoopSqrt(x float64, y int) float64{
+	var z = 1.0
+	for i :=0; i < y; i ++ {
+		z -= (z*z - x) / (2*z)
+	}
+	fmt.Printf("the sqrt of %f is %f, runs %d times\n", x, z, y)
+	return z;
+}
