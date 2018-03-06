@@ -40,7 +40,11 @@ func TestLoopSqrt(t *testing.T) {
 }
 
 func TestAdder(t *testing.T) {
-	adder := Adder()
-	result := adder(10);
-	fmt.Println(result)
+	pos, neg := Adder(), Adder()
+	for i := 0; i < 10; i++ {
+		fmt.Println(
+			pos(i),
+			neg(-2*i),
+		)
+	}
 }
