@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math"
 	"math/rand"
+	"strings"
 )
 
 func Packages() {
@@ -42,5 +43,45 @@ func Adder() func(int) int  {
 	return func(x int) int {
 		sum = sum + x
 		return sum
+	}
+}
+
+func Pic(dx, dy int) [][]uint8 {
+	// Allocate two-dimensioanl array.
+	a := make([][]uint8, dy)
+	for i := 0; i < dy; i++ {
+		a[i] = make([]uint8, dx)
+	}
+
+	// Do something.
+	for i := 0; i < dy; i++ {
+		for j := 0; j < dx; j++ {
+			a[i][j] = uint8(i*i + j*j)
+		}
+	}
+	return a
+}
+
+func WordCount(s string) map[string]int {
+	words := strings.Fields(s)
+	count := make(map[string]int)
+	for _, v := range words {
+		if count[v] != 0 {
+			count[v] ++
+		} else {
+			count[v] = 1
+		}
+	}
+	return count
+}
+
+func FibonacciClo() func() int {
+	before := 0
+	next := 1
+	return func() int {
+		temp := next
+		next = before + next
+		before = temp
+		return next
 	}
 }

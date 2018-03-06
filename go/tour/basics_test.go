@@ -48,3 +48,35 @@ func TestAdder(t *testing.T) {
 		)
 	}
 }
+
+func TestPic(t *testing.T) {
+	//pic.Show(Pic)
+}
+
+func TestWordCount(t *testing.T) {
+	cases := []struct {
+		in string
+		want map[string]int
+	}{
+		{
+			"I am learning Go!",
+			map[string]int{"am":1, "learning":1, "Go!":1, "I":1},
+		},
+		{
+			"I ate a donut. Then I ate another donut.",
+			map[string]int{"Then":1, "another":1, "I":2, "ate":2, "a":1, "donut.":2},
+		},
+	}
+	for _, c := range cases {
+		got := WordCount(c.in)
+		t.Logf("wordcount(%s) == %v, want %v", c.in ,got ,c.want)
+	}
+}
+
+func TestFibonacciClo(t *testing.T) {
+	f := FibonacciClo()
+	for i := 0; i< 10 ; i ++ {
+		num := f()
+		fmt.Printf("%d ", num)
+	}
+}
