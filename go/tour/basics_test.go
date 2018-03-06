@@ -38,3 +38,9 @@ func TestLoopSqrt(t *testing.T) {
 	LoopSqrt(x, y)
 
 }
+
+func TestAdder(t *testing.T) {
+	adder := Adder()
+	result := adder(10);
+	fmt.Println(result)
+}

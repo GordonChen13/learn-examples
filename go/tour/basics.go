@@ -36,3 +36,11 @@ func LoopSqrt(x float64, y int) float64{
 	fmt.Printf("the sqrt of %f is %f, runs %d times\n", x, z, y)
 	return z;
 }
+
+func Adder() func(int) int  {
+	sum := 5
+	return func(x int) int {
+		sum = sum + x
+		return sum
+	}
+}
