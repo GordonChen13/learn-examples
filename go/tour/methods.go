@@ -10,13 +10,13 @@ func (ip IPAddr) String() string {
 type SqrtError float64
 
 func (e SqrtError) Error() string  {
-	return fmt.Sprintf("cannot Sqrt negative number: %v", float64(e))
+	if e < 0 {
+		return fmt.Sprintf("cannot Sqrt negative number: %v", float64(e))
+	}
+	return "hah"
 }
 
 func LoopSqrtError(s SqrtError, n int) (float64, e error)  {
-	if s < 0 {
-		e := "error"
-	}
 	var z SqrtError
 	z = 1.0
 	for i := 0; i < n; i ++ {
