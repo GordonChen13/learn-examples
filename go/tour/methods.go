@@ -23,3 +23,12 @@ func LoopSqrtError(s SqrtError, n int) (float64, e error)  {
 		z -= (s * s - z) / 2*z
 	}
 }
+
+type MyReader struct{}
+
+// TODO: Add a Read([]byte) (int, error) method to MyReader.
+
+
+type rot13Reader struct {
+	r io.Reader
+}
