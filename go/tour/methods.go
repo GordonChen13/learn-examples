@@ -1,6 +1,9 @@
 package tour
 
-import "fmt"
+import (
+	"fmt"
+	"io"
+)
 
 type IPAddr [4]byte
 func (ip IPAddr) String() string {
@@ -16,12 +19,15 @@ func (e SqrtError) Error() string  {
 	return "hah"
 }
 
-func LoopSqrtError(s SqrtError, n int) (float64, e error)  {
-	var z SqrtError
-	z = 1.0
+func LoopSqrtError(s float64, n int) (float64, error)  {
+	if s < 0 {
+		return 0, SqrtError(s)
+	}
+	z := 1.0
 	for i := 0; i < n; i ++ {
 		z -= (s * s - z) / 2*z
 	}
+	return  z, nil
 }
 
 type MyReader struct{}

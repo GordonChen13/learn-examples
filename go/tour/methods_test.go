@@ -14,3 +14,9 @@ func TestIPAddr_String(t *testing.T) {
 		fmt.Printf("%v: %v\n", name, ip)
 	}
 }
+
+func TestLoopSqrtError(t *testing.T) {
+	x := -10.0
+	y := 100
+	LoopSqrtError(x, y)
+}
