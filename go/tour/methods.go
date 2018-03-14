@@ -30,11 +30,20 @@ func LoopSqrtError(s float64, n int) (float64, error)  {
 	return  z, nil
 }
 
-type MyReader struct{}
-
-// TODO: Add a Read([]byte) (int, error) method to MyReader.
-
 
 type rot13Reader struct {
 	r io.Reader
+}
+
+func (rot *rot13Reader) Read(b []byte) (int, error) {
+	n, e := rot.r.Read(b)
+
+	for i := 0; i < n; i++ {
+		if (b[i] >= 'A' && b[i] < 'N') || (b[i] >= 'a' && b[i] < 'n') {
+			b[i] += 13
+		} else if (b[i] > 'M' && b[i] <= 'Z') || (b[i] > 'm' && b[i] <= 'z') {
+			b[i] -= 13
+		}
+	}
+	return n, e
 }

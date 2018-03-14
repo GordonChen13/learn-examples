@@ -3,6 +3,9 @@ package tour
 import (
 	"testing"
 	"fmt"
+	"strings"
+	"io"
+	"os"
 )
 
 func TestIPAddr_String(t *testing.T) {
@@ -19,4 +22,10 @@ func TestLoopSqrtError(t *testing.T) {
 	x := -10.0
 	y := 100
 	LoopSqrtError(x, y)
+}
+
+func TestRot13Reader_Read(t *testing.T) {
+	s := strings.NewReader("Lbh penpxrq gur pbqr!")
+	r := rot13Reader{s}
+	io.Copy(os.Stdout, &r)
 }
