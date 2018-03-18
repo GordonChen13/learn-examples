@@ -9,3 +9,7 @@ func TestMultiplesOf3And5(t *testing.T) {
 func TestEvenFibonacciNumbers(t *testing.T) {
 	EvenFibonacciNumbers()
 }
+
+func TestLargestPrimeFactor(t *testing.T) {
+	LargestPrimeFactor()
+}
