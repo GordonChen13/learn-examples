@@ -86,3 +86,32 @@ func biggest(s []int64) int64  {
 	}
 	return n
 }
+
+// 4 Largest palindrome product
+// A palindromic number reads the same both ways.
+// The largest palindrome made from the product of two 2-digit numbers is 9009 = 91 × 99.
+//Find the largest palindrome made from the product of two 3-digit numbers.
+func LargestPalindromeProduct() {
+	for i := 999; i >= 100; i -- {
+		for j := 999; j >= 100; j -- {
+			var num = i * j;
+			if isPalindrome(num) {
+				fmt.Printf("the biggest palindrome is %d", num);
+			}
+		}
+	}
+}
+
+func isPalindrome(num int64) bool {
+	sum := 0
+	temp := num
+	for (num) {
+		sum = sum * 10 + num % 10
+		num = num / 10
+	}
+	if sum == temp {
+		return true
+	} else {
+		return false
+	}
+}
