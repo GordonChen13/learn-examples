@@ -102,7 +102,7 @@ func LargestPalindromeProduct() {
 	}
 }
 
-func isPalindrome(num int64) bool {
+func isPalindrome(num int) bool {
 	sum := 0
 	temp := num
 	for (num) {
