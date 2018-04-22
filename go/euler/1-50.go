@@ -97,6 +97,7 @@ func LargestPalindromeProduct() {
 			var num = i * j;
 			if isPalindrome(num) {
 				fmt.Printf("the biggest palindrome is %d", num);
+				break
 			}
 		}
 	}
@@ -105,7 +106,7 @@ func LargestPalindromeProduct() {
 func isPalindrome(num int) bool {
 	sum := 0
 	temp := num
-	for (num) {
+	for ; num != 0; {
 		sum = sum * 10 + num % 10
 		num = num / 10
 	}
