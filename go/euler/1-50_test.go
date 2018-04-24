@@ -13,3 +13,7 @@ func TestEvenFibonacciNumbers(t *testing.T) {
 func TestLargestPrimeFactor(t *testing.T) {
 	LargestPrimeFactor()
 }
+
+func TestLargestPalindromeProduct(t *testing.T) {
+	LargestPalindromeProduct()
+}
