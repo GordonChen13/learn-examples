@@ -1,3 +1,5 @@
+package com.gordonchen13.headfirst
+
 public class SimpleDotComTestDrive {
     public static void main(String[] args) {
         SimpleDotCom = new SimpleDotCom();

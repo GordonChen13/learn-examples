@@ -1,3 +1,5 @@
+package com.gordonchen13.headfirst
+
 public class SimpleDotCom {
     int[] localtionCells;
     int numOfHits = 0;
