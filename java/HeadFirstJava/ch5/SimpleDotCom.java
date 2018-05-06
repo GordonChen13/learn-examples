@@ -1,14 +1,14 @@
-package com.gordonchen13.headfirst
+//package com.gordonchen13.headfirst;
 
 public class SimpleDotCom {
     int[] localtionCells;
     int numOfHits = 0;
 
-    public void setLocaltionCells(int[] cells) {
+    public void setLocationCells(int[] cells) {
         this.localtionCells = cells;
     }
 
-    public static checkYourself(String stringGuess) {
+    public String checkYourself(String stringGuess) {
         int guess = Integer.parseInt(stringGuess);
         String result = "miss";
 

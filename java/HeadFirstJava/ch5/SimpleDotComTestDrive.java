@@ -1,8 +1,8 @@
-package com.gordonchen13.headfirst
+package com.gordonchen13.headfirst;
 
 public class SimpleDotComTestDrive {
     public static void main(String[] args) {
-        SimpleDotCom = new SimpleDotCom();
+        SimpleDotCom dot = new SimpleDotCom();
 
         int[] locations = {2, 3, 4};
         dot.setLocationCells(locations);
