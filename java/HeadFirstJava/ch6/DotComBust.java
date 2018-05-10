@@ -28,7 +28,7 @@ public class DotComBust {
     }
 
     private void startPlaying() {
-        while (!dotComList.isEmpty()) {
+        while (!dotComLists.isEmpty()) {
             String userGuess = helper.getUserInput("Enter a guess");
             checkUserGuess(userGuess);
         }
@@ -58,7 +58,7 @@ public class DotComBust {
             System.out.println("It only took you " + numOfGuess + "guesses.");
             System.out.println("You got out before your opotions sank.");
         } else {
-            System.out.println("Took you long enough. " + numOfGuess + "guesses.");
+            System.out.println("Took you long enough. " + numOfGuess + " guesses.");
             System.out.println("Fish are dance with your options");
         }
     }
