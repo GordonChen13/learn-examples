@@ -1,0 +1,4 @@
+what's your name?/gordon
+how old are you?/18
+what's your favorite food?/meat
+are you ok?/yes
