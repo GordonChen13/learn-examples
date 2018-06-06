@@ -1,12 +1,11 @@
 import java.util.*;
 import java.io.*;
 
-public class Jukebox1 {
-
+public class Jukebox6 {
     ArrayList<Song> songList = new ArrayList<Song>();
 
     public static void main(String[] args) {
-        new Jukebox1().go();
+        new Jukebox6().go();
     }
 
     public void go() {
@@ -15,14 +14,14 @@ public class Jukebox1 {
         Collections.sort(songList);
         System.out.println(songList);
 
-        ArtistCompare artistCompare = new ArtistCompare();
-        Collections.sort(songList, artistCompare);
-        System.out.println(songList);
+        TreeSet<Song> songSet = new TreeSet<Song>();
+        songSet.addAll(songList);
+        System.out.println(songSet);
     }
 
     public void getSongs() {
         try {
-            File file = new File("SongList.txt");
+            File file = new File("SongListMore.txt");
             BufferedReader reader = new BufferedReader(new FileReader(file));
             String line = null;
             while ((line = reader.readLine()) != null) {

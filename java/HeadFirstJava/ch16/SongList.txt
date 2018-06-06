@@ -1,10 +1,10 @@
-love/westlife
-test/Chen
-Pink Moon/Nick Drake
-Somersault/Zero 7
-Shiva Moon/Prem Joshua
-Deep Channel/Afro Celts
-Passenger/Headmix
-Listen/Tahiti 80
-Hello/Adele
-Thanks/Chen
+love/westlife/10/200
+test/Chen/9/188
+Pink Moon/Nick Drake/8/150
+Somersault/Zero 7/5/205
+Shiva Moon/Prem Joshua/2/30
+Deep Channel/Afro Celts/6/130
+Passenger/Headmix/7/145
+Listen/Tahiti 80/3/100
+Hello/Adele/4/110
+Thanks/Chen/1/20
