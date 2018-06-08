@@ -3,6 +3,7 @@ package euler
 import (
 	"fmt"
 	"math"
+	"os"
 )
 
 // 1 Multiples of 3 and 5
@@ -95,9 +96,10 @@ func LargestPalindromeProduct() {
 	for i := 999; i >= 100; i -- {
 		for j := 999; j >= 100; j -- {
 			var num = i * j;
+			fmt.Println(num)
 			if isPalindrome(num) {
-				fmt.Printf("the biggest palindrome is %d", num);
-				break
+				fmt.Printf("the biggest palindrome is %d/n", num);
+				os.Exit(1)
 			}
 		}
 	}
