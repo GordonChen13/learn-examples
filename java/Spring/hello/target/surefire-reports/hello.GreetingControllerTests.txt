@@ -1,16 +1,12 @@
 -------------------------------------------------------------------------------
 Test set: hello.GreetingControllerTests
 -------------------------------------------------------------------------------
-Tests run: 2, Failures: 2, Errors: 0, Skipped: 0, Time elapsed: 1.645 s <<< FAILURE! - in hello.GreetingControllerTests
-noParamGreetingShouldReturnDefaultMessage(hello.GreetingControllerTests)  Time elapsed: 0.157 s  <<< FAILURE!
-java.lang.AssertionError: 
-JSON path "$.content" expected:<Hello, World!> but was:<Hello, World! 
-The current time is 17:06:27.495>
-	at hello.GreetingControllerTests.noParamGreetingShouldReturnDefaultMessage(GreetingControllerTests.java:43)
+Tests run: 2, Failures: 0, Errors: 2, Skipped: 0, Time elapsed: 4.996 s <<< FAILURE! - in hello.GreetingControllerTests
+noParamGreetingShouldReturnDefaultMessage(hello.GreetingControllerTests)  Time elapsed: 0.283 s  <<< ERROR!
+java.lang.NoSuchMethodError: javax.servlet.http.HttpServletResponse.getStatus()I
+	at hello.GreetingControllerTests.noParamGreetingShouldReturnDefaultMessage(GreetingControllerTests.java:42)
 
-paramGreetingShouldReturnTailoredMessage(hello.GreetingControllerTests)  Time elapsed: 0.003 s  <<< FAILURE!
-java.lang.AssertionError: 
-JSON path "$.content" expected:<Hello, Spring Community!> but was:<Hello, Spring Community! 
-The current time is 17:06:27.495>
-	at hello.GreetingControllerTests.paramGreetingShouldReturnTailoredMessage(GreetingControllerTests.java:51)
+paramGreetingShouldReturnTailoredMessage(hello.GreetingControllerTests)  Time elapsed: 0.003 s  <<< ERROR!
+java.lang.NoSuchMethodError: javax.servlet.http.HttpServletResponse.getStatus()I
+	at hello.GreetingControllerTests.paramGreetingShouldReturnTailoredMessage(GreetingControllerTests.java:49)
 
