@@ -1,0 +1,3 @@
+class Tank {
+    int level;
+}
