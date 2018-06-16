@@ -1,0 +1,15 @@
+{
+    "name": "root/visu-alog",
+    "description": "my learning code form visualgo.net",
+    "require-dev": {
+        "phpunit/phpunit": "7"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "GordonChen13",
+            "email": "1029052540@qq.com"
+        }
+    ],
+    "require": {}
+}
