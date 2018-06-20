@@ -11,5 +11,17 @@
             "email": "1029052540@qq.com"
         }
     ],
-    "require": {}
+    "require": {
+
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    }
 }
