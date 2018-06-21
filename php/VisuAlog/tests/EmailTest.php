@@ -3,8 +3,9 @@ declare(strict_types=1);
 
 namespace Tests;
 
-use PHPunit\Framework\TestCase;
+use PHPUnit\Framework\TestCase;
 use App\Email;
+use InvalidArgumentException;
 
 final class EmailTest extends TestCase
 {
