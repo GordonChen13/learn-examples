@@ -14,7 +14,6 @@ final class ArraySorter
                 }
             }
         }
-        echo $array;
         return $array;
     }
 }
