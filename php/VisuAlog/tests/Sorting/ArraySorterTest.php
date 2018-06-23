@@ -23,7 +23,6 @@ class ArraySorterTest extends TestCase
      */
     public function isArrayEqual(array $a, array $b)
     {
-        var_dump($a, $b);
         if (count(array_diff_assoc($a, $b))) {
             return false;
         }
@@ -38,16 +37,17 @@ class ArraySorterTest extends TestCase
     }
 
     /**
-     * 冒泡排序测试
+     * 数组相等测试
      */
-    public function testBubbleSort()
+    public function testArrayEqual()
     {
         $arr = $this->randomArray();
 
-        $sorted = ArraySorter::bubble($arr);
+        $bubbleSorted = ArraySorter::bubble($arr);
 
         asort($arr);
+        $phpSorted = array_values($arr);
 
-        $this->assertTrue($this->isArrayEqual($arr, $sorted));
+        $this->assertTrue($this->isArrayEqual($phpSorted, $bubbleSorted));
     }
 }
