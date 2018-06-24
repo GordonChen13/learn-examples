@@ -11,6 +11,8 @@ class ArraySorterTest extends TestCase
      */
     public function randomArray() :array
     {
+        $data = array();
+
         for($i = 0; $i < rand(1, 20); $i++) {
             $data[] = rand(-100, 100);
         }
@@ -44,10 +46,14 @@ class ArraySorterTest extends TestCase
         $arr = $this->randomArray();
 
         $bubbleSorted = ArraySorter::bubble($arr);
+        $selectSorted = ArraySorter::select($arr);
+//        $insertSorted = ArraySorter::insert($arr);
 
         asort($arr);
         $phpSorted = array_values($arr);
 
         $this->assertTrue($this->isArrayEqual($phpSorted, $bubbleSorted));
+        $this->assertTrue($this->isArrayEqual($phpSorted, $selectSorted));
+//        $this->assertTrue($this->isArrayEqual($phpSorted, $insertSorted));
     }
 }
