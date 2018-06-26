@@ -47,19 +47,15 @@ final class ArraySorter
      */
     public static function insert(array $arr) :array
     {
-        if (count($arr) == 0) {
-            return array();
-        }
-
-        $sorted = array($arr[0]);
-
         for ($i = 1; $i < count($arr); $i++) {
-            for ($j = 0; $j < count($sorted); $j++) {
-                if($sorted[$j] > $arr[$i]) {
-                    array_splice($sorted, $j, 0, $arr[$i]);
+            for ($j = $i; $j > 0; $j--) {
+                if ($arr[$j] < $arr[$j - 1]) {
+                    $temp = $arr[$j - 1];
+                    $arr[$j - 1] = $arr[$j];
+                    $arr[$j] = $temp;
                 }
             }
         }
-        return $sorted;
+        return $arr;
     }
 }
