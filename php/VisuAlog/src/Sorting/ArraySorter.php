@@ -7,8 +7,10 @@ namespace App\Sorting;
  */
 final class ArraySorter
 {
-    /*
-     * 冒泡排序
+    /**
+     * 冒泡排序 O(N^2)
+     * @param array $array
+     * @return array $arr
      */
     public static function bubble(array $array) :array
     {
@@ -24,8 +26,10 @@ final class ArraySorter
         return $array;
     }
 
-    /*
-     * 选择排序
+    /**
+     * 选择排序 0(N^2)
+     * @param array $arr
+     * @return array $arr
      */
     public static function select(array $arr) :array
     {
@@ -42,8 +46,10 @@ final class ArraySorter
         return $arr;
     }
 
-    /*
-     * 插入排序
+    /**
+     * 插入排序 O(N^2)
+     * @param array $arr
+     * @return array $arr
      */
     public static function insert(array $arr) :array
     {
@@ -56,6 +62,16 @@ final class ArraySorter
                 }
             }
         }
+        return $arr;
+    }
+
+    /**
+     * merge sort O(N logN)
+     * @param array $arr
+     * @return array
+     */
+    public static function merge(array $arr)
+    {
         return $arr;
     }
 }
