@@ -70,8 +70,39 @@ final class ArraySorter
      * @param array $arr
      * @return array
      */
-    public static function merge(array $arr)
+    public static function merge(array $arr) :array
     {
+        $count = count($arr);
+        if ($count == 1) {
+            return $arr;
+        }
+
+        $mid = $count/2;
+        $left = array_slice($arr, 0, $mid);
+        $right = array_slice($arr, $mid);
+
+        $leftSorted = self::merge($left);
+        $rightSorted = self::merge($right);
+
+        $n1 = $n2 = 0;
+
+//        var_dump($arr, $leftSorted, $rightSorted);
+        for ($i = 0; $i < count($arr); $i++) {
+            if ($leftSorted[$n1] > $rightSorted[$n2]) {
+                $arr[$i] = $rightSorted[$n2];
+                if ($n2 < (count($rightSorted) -1 )) {
+                    ++$n2;
+                }
+            } else {
+                $arr[$i] = $leftSorted[$n1];
+                if ($n1 < (count($leftSorted) - 1 )) {
+                    ++$n1;
+                }
+            }
+        }
+        var_dump($arr);
         return $arr;
+
     }
+
 }
