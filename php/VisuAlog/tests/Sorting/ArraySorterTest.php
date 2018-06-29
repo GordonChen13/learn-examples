@@ -49,6 +49,7 @@ class ArraySorterTest extends TestCase
         $selectSorted = ArraySorter::select($arr);
         $insertSorted = ArraySorter::insert($arr);
         $mergeSorted = ArraySorter::merge($arr);
+        $quickSorted = ArraySorter::quick($arr);
 
         asort($arr);
         $phpSorted = array_values($arr);
@@ -57,5 +58,6 @@ class ArraySorterTest extends TestCase
         $this->assertTrue($this->isArrayEqual($phpSorted, $selectSorted));
         $this->assertTrue($this->isArrayEqual($phpSorted, $insertSorted));
         $this->assertTrue($this->isArrayEqual($phpSorted, $mergeSorted));
+        $this->assertTrue($this->isArrayEqual($phpSorted, $quickSorted));
     }
 }

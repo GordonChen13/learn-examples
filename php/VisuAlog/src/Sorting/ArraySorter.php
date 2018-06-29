@@ -86,23 +86,43 @@ final class ArraySorter
 
         $n1 = $n2 = 0;
 
-//        var_dump($arr, $leftSorted, $rightSorted);
+        // merge two sorted array
         for ($i = 0; $i < count($arr); $i++) {
-            if ($leftSorted[$n1] > $rightSorted[$n2]) {
+            if ($n2 == count($rightSorted)) {
+                $arr[$i] = $leftSorted[$n1];
+            } else if ($n1 == count($leftSorted) || $leftSorted[$n1] > $rightSorted[$n2]) {
                 $arr[$i] = $rightSorted[$n2];
-                if ($n2 < (count($rightSorted) -1 )) {
-                    ++$n2;
-                }
+                $n2++;
+
             } else {
                 $arr[$i] = $leftSorted[$n1];
-                if ($n1 < (count($leftSorted) - 1 )) {
-                    ++$n1;
-                }
+                $n1++;
             }
         }
-        var_dump($arr);
+
         return $arr;
 
+    }
+
+    public static function quick(array $arr) :array
+    {
+        $left = $right = array();
+        if (count($arr) < 2) {
+            return $arr;
+        }
+
+        $pk = key($arr);
+        $p = array_shift($arr);
+
+        for ($i = 0; $i < count($arr); $i++) {
+            if ($arr[$i] <= $p) {
+                $left[] = $arr[$i];
+            } else {
+                $right[] = $arr[$i];
+            }
+        }
+
+        return array_merge(self::quick($left), array($pk => $p), self::quick($right));
     }
 
 }
