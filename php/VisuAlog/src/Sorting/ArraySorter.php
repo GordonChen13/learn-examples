@@ -104,6 +104,11 @@ final class ArraySorter
 
     }
 
+    /**
+     * quick sort [ worse: O(N^2), best: O(N logN) ]
+     * @param array $arr
+     * @return array
+     */
     public static function quick(array $arr) :array
     {
         $left = $right = array();

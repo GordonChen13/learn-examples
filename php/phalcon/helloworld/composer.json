@@ -1,0 +1,21 @@
+{
+    "name": "gordon/helloworld",
+    "description": "hello world example for phalcon framework",
+    "type": "project",
+    "require": {
+        "php": "^7.2",
+        "ext-phalcon": "^3.3",
+        "ext-mbstring": "^7.2",
+        "ext-iconv": "^7.2"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^7.2"
+    },
+    "license": "mit",
+    "authors": [
+        {
+            "name": "GordonChen13",
+            "email": "1029052540@qq.com"
+        }
+    ]
+}
