@@ -46,6 +46,7 @@ $app->get(
     function() use($app) {
         $phql = 'SELECT *  FROM Store\Toys\Robots ORDER BY name';
         $robots = $app->modelsManager->executeQuery($phql);
+
         $data = [];
         foreach ($robots as $robot) {
             $data[] = [
@@ -67,6 +68,7 @@ $app->get(
                 'name' => '%'.$name.'%',
             ]
         );
+
         $data = [];
         foreach ($robots as $robot) {
             $data[] = [
@@ -88,6 +90,7 @@ $app->get(
                 'id' => $id,
             ]
         )->getFirst();
+
         $response = new Response();
         if ($robot === false) {
             $response->setJsonContent(
@@ -106,29 +109,126 @@ $app->get(
                 ]
             );
         }
-        return $response;
 
+        return $response;
     }
 );
 // 添加新的robot
 $app->post(
     '/api/robots',
-    function() {
+    function() use ($app) {
+        $robot = $app->request->getJsonRawBody();
+        $phql = 'INSERT INTO Store\Toys\Robots (name, type, year) VALUES (:name, :type, :year)';
+        $status = $app->modelsManager->executeQuery(
+            $phql,
+            [
+                'name' => $robot->name,
+                'type' => $robot->type,
+                'year' =>$robot->year,
+            ]
+        );
 
+        $response = new Response();
+        if ($status->success() === true) {
+            $response->setStatusCode(201, 'Created');
+            $robot->id = $status->getModel()->id,
+            $response->setJsonContent(
+                [
+                    'status' => 'OK',
+                    'data' => $robot,
+                ]
+            );
+        } else {
+            $response->setStatusCode(409, 'Conflict');
+            $errors = [];
+            foreach ($status->getMessages() as $message) {
+                $errors[] = $message->getMessage();
+            }
+            $response->setJsonContent(
+                [
+                    'status' => 'ERROR',
+                    'messages' => $errors,
+                ]
+            );
+        }
+
+        return $response;
     }
 );
 // 更新指定id的robot
 $app->put(
     '/api/robots/{id:[0-9]+}',
-    function($id) {
+    function($id) use ($app) {
+        $robot = $app->request->getJsonRawBody();
+        $phql = 'UPDATE Store\Toys\Robots SET name = :name, type = :type, year = :year WHERE id = :id';
+        $status = $app->modelsManager->executeQuery(
+            $phql,
+            [
+                'name' => $robot->name,
+                'type' => $robot->type,
+                'year' => $robot->year,
+                'id' => $id,
+            ]
+        );
 
+        $response = new Response();
+        if ($status->success() === true) {
+            $response->setJsonContent(
+                [
+                    'status' => 'OK',
+                ]
+            );
+        } else {
+            $response->setStatusCode(409, 'Conflict');
+            $errors = [];
+            foreach ($errors as $error) {
+                $errors[] = $error->getMessage();
+            }
+            $response->setJsonContent(
+                [
+                    'status' => 'ERROR',
+                    'messages' => $errors,
+                ]
+            );
+        }
+
+        return $response;
     }
 );
 // 删除指定id的robot
 $app->delete(
     '/api/robots/{id:[0-9]+}',
-    function($id) {
+    function($id) use ($app) {
+        $phql = 'DELETE FROM Store\Toys\Robots WHERE id = :id';
+        $status = $app->modelsManager->executeQuery(
+            $phql,
+            [
+                'id' => $id,
+            ]
+        );
 
+        $response = new Response();
+        if ($status->success() === true) {
+            $response->setJsonContent(
+                [
+                    'status' => 'OK',
+                ]
+            );
+        } else {
+            $response->setStatusCode(409, 'Conflict');
+            $errors = [];
+            foreach ($errors as $error) {
+                $errors[] = $error->getMessage();
+            }
+            $response->setJsonContent(
+                [
+                    'status' => 'ERROR',
+                    'messages' => $errors,
+                ]
+            );
+        }
+
+        return $response;
     }
 );
 $app->handle();
