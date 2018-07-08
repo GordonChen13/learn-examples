@@ -4,5 +4,5 @@
 require '../../vendor/autoload.php';
 
 // 加载路由
-require '../config/routes.php';
+require '../Config/routes.php';
 
