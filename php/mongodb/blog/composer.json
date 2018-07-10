@@ -21,7 +21,11 @@
     "autoload": {
         "psr-4": {
             "App\\": "src/"
-        }
+        },
+        "classmap": [
+            "src/Controllers",
+            "src/Models"
+        ]
     },
     "autoload-dev": {
         "psr-e": {
