@@ -20,9 +20,9 @@ class User
     public function create(array $user)
     {
          $result = $this->collection->insertOne([
-             'name' => $user['name'],
-             'phone' => $user['phone'],
-             'password' => md5($user['password'])
+             'name' => $user["name"] ??  'hahah',
+             'phone' => $user["phone"] ?? '121433',
+             'password' => md5($user["password"])
          ]);
 
          return $result;
