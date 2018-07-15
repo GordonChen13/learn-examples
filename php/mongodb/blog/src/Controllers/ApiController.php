@@ -19,4 +19,15 @@ class ApiController
         ]);
         die();
     }
+
+    public function serverHandleError(string $message)
+    {
+        http_response_code(500);
+
+        echo json_encode([
+            'status' => 'server error! please contact the admin.',
+            'message' => $message,
+        ]);
+        die();
+    }
 }
