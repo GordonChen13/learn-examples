@@ -2,10 +2,9 @@
 namespace App\Models;
 
 use MongoDB\Client;
-use App\Controllers\ApiController;
 use Carbon\Carbon;
 
-class Posts extends ApiController
+class Posts
 {
     private $collection;
 

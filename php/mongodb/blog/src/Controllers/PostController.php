@@ -2,7 +2,6 @@
 namespace App\Controllers;
 
 use App\Models\Posts;
-use App\Controllers\ApiController;
 
 class PostController extends ApiController
 {
