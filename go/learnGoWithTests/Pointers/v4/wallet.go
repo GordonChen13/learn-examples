@@ -12,6 +12,9 @@ func (w *Wallet) Deposit(amount BitCoin) {
 }
 
 func (w *Wallet) Withdraw(amount BitCoin) error {
+	if w.balance < amount {
+		return NewError(ErrorOverDraw)
+	}
 	w.balance -= amount
 	return nil
 }

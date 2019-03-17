@@ -34,12 +34,14 @@ func TestWallet(t *testing.T)  {
 		wallet := &Wallet{BitCoin(10.0)}
 		err := wallet.Withdraw(BitCoin(20.0))
 
-		want := BitCoin(-10.0)
+		if err == nil {
+			t.Errorf("wanted an error but didn't get one")
+		}
 
-		assertBalance(t, wallet, want)
+		assertBalance(t, wallet, BitCoin(10.0))
 
-		if err != nil {
-			t.Errorf("withdraw error : %v", err)
+		if err.(*OverDrawError).code != ErrorOverDraw {
+			t.Errorf("wanted over draw error but didn't get one")
 		}
 	})
 }
