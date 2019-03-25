@@ -49,6 +49,14 @@ func TestWalk(t *testing.T) {
 			[]string{"Chris", "ShenZhen"},
 		},
 		{
+			"Arrays",
+			[2]Profile {
+				{33, "London"},
+				{34, "Reykjavik"},
+			},
+			[]string{"London", "Reykjavik"},
+		},
+		{
 			"Pointer to things",
 			&Person{"Chris", Profile{33, "ShenZhen"}},
 			[]string{"Chris", "ShenZhen"},
@@ -57,6 +65,14 @@ func TestWalk(t *testing.T) {
 			"Slices",
 			&Person{"Chris", Profile{33, "ShenZhen"}},
 			[]string{"Chris", "ShenZhen"},
+		},
+		{
+			"Maps",
+			map[string]string{
+				"Foo": "Bar",
+				"Baz": "Boz",
+			},
+			[]string{"Bar", "Boz"},
 		},
 	}
 	for _, test := range cases {
