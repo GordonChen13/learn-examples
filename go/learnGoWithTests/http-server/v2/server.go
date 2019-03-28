@@ -9,6 +9,12 @@ type PlayerServer struct {
 	store PlayerStore
 }
 
+type PlayerStore interface {
+	GetPlayerScore(name string) int
+	RecordWin(name string)
+}
+
+
 func (p *PlayerServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodPost:

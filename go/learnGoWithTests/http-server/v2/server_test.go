@@ -7,6 +7,20 @@ import (
 	"testing"
 )
 
+type StubPlayerStore struct {
+	scores map[string]int
+	winCalls []string
+}
+
+func (s *StubPlayerStore) GetPlayerScore(name string) int{
+	score := s.scores[name]
+	return score
+}
+
+func (s *StubPlayerStore) RecordWin(name string) {
+	s.winCalls = append(s.winCalls, name)
+}
+
 func TestPlayerServer(t *testing.T) {
 	store := StubPlayerStore{
 		map[string]int{
@@ -96,20 +110,4 @@ func assertStatus(t *testing.T, got, want int) {
 	if got != want {
 		t.Errorf("got status %d want %d", got, want)
 	}
-}
-
-func TestRecordingWinsAndRetrievingThem(t *testing.T) {
-	store := InMemoryPlayerStore{map[string]int{}}
-	server := PlayerServer{&store}
-	player := "Pepper"
-
-	server.ServeHTTP(httptest.NewRecorder(), newPostWinRequest(player))
-	server.ServeHTTP(httptest.NewRecorder(), newPostWinRequest(player))
-	server.ServeHTTP(httptest.NewRecorder(), newPostWinRequest(player))
-
-	response := httptest.NewRecorder()
-	server.ServeHTTP(response, newGetScoreRequest(player))
-	assertStatus(t, response.Code, http.StatusOK)
-
-	assertResponseBody(t, response.Body.String(), "3")
 }
