@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/GordonChen13/learn-examples/go/learnGoWithTests/commandLine/v1"
+	"github.com/GordonChen13/learn-examples/go/learnGoWithTests/time/v1"
 	"github.com/labstack/gommon/log"
 	"os"
 )
@@ -17,6 +17,6 @@ func main() {
 	fmt.Println("Let's play poker")
 	fmt.Println("Type {Name} wins to record a win")
 
-	game := poker.NewCLI(store, os.Stdin)
+	game := poker.NewCLI(store, os.Stdin, poker.BlindAlerterFunc(poker.StdOutAlerter))
 	game.PlayPoker()
 }
