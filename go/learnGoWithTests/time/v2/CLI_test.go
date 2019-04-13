@@ -85,7 +85,7 @@ func TestCLI(t *testing.T) {
 		game := &GameSpy{}
 		stdout := &bytes.Buffer{}
 
-		in := userSends("8", "Pies")
+		in := userSends("pies")
 		cli := NewCLI(in, stdout, game)
 
 		cli.PlayPoker()
@@ -104,7 +104,7 @@ func TestCLI(t *testing.T) {
 		cli.PlayPoker()
 
 		assertGameNotFinished(t, game)
-		assertMessagesSentToUser(t, stdout, PlayerPrompt, BadWinerInputErrMsg)
+		assertMessagesSentToUser(t, stdout, PlayerPrompt, BadWinnerInputErrMsg)
 	})
 }
 
@@ -141,7 +141,7 @@ func assertMessagesSentToUser(t *testing.T, stdout *bytes.Buffer, messages ...st
 func assertGameStartedWith(t *testing.T, game *GameSpy, num int)  {
 	t.Helper()
 	if game.StartCalledWith!= num{
-		t.Errorf("expected start called with '%s', got '%s'", num , game.StartCalledWith)
+		t.Errorf("expected start called with '%d', got '%d'", num , game.StartCalledWith)
 	}
 
 }
