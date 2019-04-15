@@ -2,7 +2,6 @@ package main
 
 import (
 	"github.com/GordonChen13/learn-examples/go/learnGoWithTests/websocket/v2"
-	"github.com/quii/learn-go-with-tests/websockets/v2"
 	"log"
 	"net/http"
 	"os"

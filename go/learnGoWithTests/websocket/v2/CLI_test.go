@@ -6,6 +6,7 @@ import (
 	"io"
 	"strings"
 	"testing"
+	"time"
 )
 
 var dummyBlindAlerter = &SpyBlindAlerter{}
@@ -17,6 +18,7 @@ var dummyGameSpy = &GameSpy{}
 type GameSpy struct {
 	StartCalled     bool
 	StartCalledWith int
+	BlindAlert []byte
 
 	FinishedCalled   bool
 	FinishCalledWith string
@@ -25,6 +27,7 @@ type GameSpy struct {
 func (g *GameSpy) Start(numberOfPlayers int, destination io.Writer) {
 	g.StartCalled = true
 	g.StartCalledWith = numberOfPlayers
+	destination.Write(g.BlindAlert)
 }
 
 func (g *GameSpy) Finish(winner string) {
@@ -93,7 +96,10 @@ func TestCLI(t *testing.T) {
 
 func assertGameStartedWith(t *testing.T, game *GameSpy, numberOfPlayersWanted int) {
 	t.Helper()
-	if game.StartCalledWith != numberOfPlayersWanted {
+	passed := retryUntil(500*time.Millisecond, func() bool {
+		return game.StartCalledWith == numberOfPlayersWanted
+	})
+	if !passed {
 		t.Errorf("wanted Start called with %d but got %d", numberOfPlayersWanted, game.StartCalledWith)
 	}
 }
@@ -114,7 +120,10 @@ func assertGameNotStarted(t *testing.T, game *GameSpy) {
 
 func assertFinishCalledWith(t *testing.T, game *GameSpy, winner string) {
 	t.Helper()
-	if game.FinishCalledWith != winner {
+	passed := retryUntil(500*time.Millisecond, func() bool {
+		return game.FinishCalledWith == winner
+	})
+	if !passed {
 		t.Errorf("expected finish called with '%s' but got '%s'", winner, game.FinishCalledWith)
 	}
 }
