@@ -12,4 +12,5 @@ func TestHandler(c *gin.Context) {
 func CreateMatch(c *gin.Context) {
 	name := c.PostForm("name")
 	c.String(http.StatusCreated, name)
+
 }
