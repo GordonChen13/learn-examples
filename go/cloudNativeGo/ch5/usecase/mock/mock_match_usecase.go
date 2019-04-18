@@ -11,40 +11,40 @@ import (
 	reflect "reflect"
 )
 
-// Mockmatch is a mock of match interface
-type Mockmatch struct {
+// MockMatch is a mock of Match interface
+type MockMatch struct {
 	ctrl     *gomock.Controller
-	recorder *MockmatchMockRecorder
+	recorder *MockMatchMockRecorder
 }
 
-// MockmatchMockRecorder is the mock recorder for Mockmatch
-type MockmatchMockRecorder struct {
-	mock *Mockmatch
+// MockMatchMockRecorder is the mock recorder for MockMatch
+type MockMatchMockRecorder struct {
+	mock *MockMatch
 }
 
-// NewMockmatch creates a new mock instance
-func NewMockmatch(ctrl *gomock.Controller) *Mockmatch {
-	mock := &Mockmatch{ctrl: ctrl}
-	mock.recorder = &MockmatchMockRecorder{mock}
+// NewMockMatch creates a new mock instance
+func NewMockMatch(ctrl *gomock.Controller) *MockMatch {
+	mock := &MockMatch{ctrl: ctrl}
+	mock.recorder = &MockMatchMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use
-func (m *Mockmatch) EXPECT() *MockmatchMockRecorder {
+func (m *MockMatch) EXPECT() *MockMatchMockRecorder {
 	return m.recorder
 }
 
-// create mocks base method
-func (m *Mockmatch) create(ctx context.Context, match *models.Match) (*models.Match, error) {
+// Create mocks base method
+func (m *MockMatch) Create(ctx context.Context, match *models.Match) (*models.Match, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "create", ctx, match)
+	ret := m.ctrl.Call(m, "Create", ctx, match)
 	ret0, _ := ret[0].(*models.Match)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// create indicates an expected call of create
-func (mr *MockmatchMockRecorder) create(ctx, match interface{}) *gomock.Call {
+// Create indicates an expected call of Create
+func (mr *MockMatchMockRecorder) Create(ctx, match interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "create", reflect.TypeOf((*Mockmatch)(nil).create), ctx, match)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockMatch)(nil).Create), ctx, match)
 }
