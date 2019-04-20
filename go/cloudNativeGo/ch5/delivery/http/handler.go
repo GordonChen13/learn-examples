@@ -1,6 +1,7 @@
 package http
 
 import (
+	"github.com/GordonChen13/learn-examples/go/cloudNativeGo/ch5/models"
 	"github.com/GordonChen13/learn-examples/go/cloudNativeGo/ch5/usecase"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -25,6 +26,18 @@ func (m *MatchHandler) Test(c *gin.Context) {
 
 func (m *MatchHandler) CreateMatch(c *gin.Context) {
 	name := c.PostForm("name")
-	c.String(http.StatusCreated, name)
+	id := "232324"
 
+	match := &models.Match{
+		id,
+		name,
+		nil,
+	}
+    res, err := m.matchUseCase.Create(c, match)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err)
+	}
+
+    c.JSON(http.StatusCreated, res)
 }

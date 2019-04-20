@@ -3,6 +3,7 @@ package http
 import (
 	"github.com/GordonChen13/learn-examples/go/cloudNativeGo/ch5/usecase/mock"
 	"github.com/gin-gonic/gin"
+	"github.com/golang/mock/gomock"
 	"github.com/magiconair/properties/assert"
 	"io"
 	"net/http"
@@ -15,7 +16,7 @@ import (
 var mockServer *gin.Engine = nil
 
 func TestTest(t *testing.T) {
-	res := serveRequest(http.MethodGet, "/test", nil)
+	res := serveRequest(t, http.MethodGet, "/test", nil)
 
 
 
@@ -31,7 +32,7 @@ func TestCreateMatch(t *testing.T) {
 	data := url.Values{}
 	data.Set("name", name)
 
-	res := serveRequest(http.MethodPost, "/match", strings.NewReader(data.Encode()))
+	res := serveRequest(t, http.MethodPost, "/match", strings.NewReader(data.Encode()))
 	got := res.Body.String()
 	want := name
 
@@ -40,8 +41,8 @@ func TestCreateMatch(t *testing.T) {
 
 }
 
-func serveRequest(method, url string, body io.Reader) *httptest.ResponseRecorder {
-	server := getMockServer()
+func serveRequest(t *testing.T, method, url string, body io.Reader) *httptest.ResponseRecorder {
+	server := getMockServer(t)
 
 	req, _ := http.NewRequest(method, url, body)
 	res := httptest.NewRecorder()
@@ -55,20 +56,21 @@ func serveRequest(method, url string, body io.Reader) *httptest.ResponseRecorder
 	return  res
 }
 
-func newMockServer() *gin.Engine {
+func newMockServer(t *testing.T) *gin.Engine {
 	gin.SetMode(gin.ReleaseMode)
 	router := gin.Default()
 
-	mockMatchUseCase := &mock_usecase.NewMockMatch{}
+	ctrl := gomock.NewController(t)
+	mockMatchUseCase := mock_usecase.NewMockMatch(ctrl)
 	NewMatchHandler(router, mockMatchUseCase)
 
 	return router
 }
 
-func getMockServer() *gin.Engine {
+func getMockServer(t *testing.T) *gin.Engine {
 	if mockServer != nil {
 		return mockServer
 	}
-	mockServer = newMockServer()
+	mockServer = newMockServer(t)
 	return mockServer
 }
