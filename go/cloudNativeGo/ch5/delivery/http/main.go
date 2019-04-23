@@ -12,5 +12,5 @@ func main() {
 	}
 
 	router := NewServer()
-	router .Run(":" + port)
+	router.Run(":" + port)
 }

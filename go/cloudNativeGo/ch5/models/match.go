@@ -1,12 +1,16 @@
 package models
 
 type Match struct {
-	id string
-	name string
-	moves []Step
+	Id string
+	Name string
+	Moves []Step
 }
 
 type Step struct {
-	x int
-	y int
+	X int
+	Y int
+}
+
+func NewMatchId() string {
+	return "123456"
 }

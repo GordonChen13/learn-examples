@@ -8,12 +8,12 @@ import (
 )
 
 type MatchHandler struct {
-	matchUseCase usecase.Match
+	useCase usecase.Match
 }
 
-func NewMatchHandler(router *gin.Engine, matchUseCase usecase.Match){
+func NewMatchHandler(router *gin.Engine, matchUseCase usecase.Match) {
 	handler := &MatchHandler{
-		matchUseCase:matchUseCase,
+		useCase: matchUseCase,
 	}
 
 	router.GET("/test", handler.Test)
@@ -29,15 +29,15 @@ func (m *MatchHandler) CreateMatch(c *gin.Context) {
 	id := "232324"
 
 	match := &models.Match{
-		id,
-		name,
-		nil,
+		Id:    id,
+		Name:  name,
+		Moves: nil,
 	}
-    res, err := m.matchUseCase.Create(c, match)
+	res, err := m.useCase.Create(c, match)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err)
 	}
 
-    c.JSON(http.StatusCreated, res)
+	c.JSON(http.StatusCreated, res)
 }

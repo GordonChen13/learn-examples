@@ -10,5 +10,3 @@ func NewServer() *gin.Engine {
 
 	return router
 }
-
-

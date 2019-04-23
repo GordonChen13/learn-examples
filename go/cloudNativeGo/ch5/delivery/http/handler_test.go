@@ -1,10 +1,12 @@
 package http
 
 import (
+	"github.com/GordonChen13/learn-examples/go/cloudNativeGo/ch5/models"
 	"github.com/GordonChen13/learn-examples/go/cloudNativeGo/ch5/usecase/mock"
 	"github.com/gin-gonic/gin"
 	"github.com/golang/mock/gomock"
 	"github.com/magiconair/properties/assert"
+	"golang.org/x/net/context"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -13,12 +15,17 @@ import (
 	"testing"
 )
 
-var mockServer *gin.Engine = nil
+var router *gin.Engine = nil
 
 func TestTest(t *testing.T) {
-	res := serveRequest(t, http.MethodGet, "/test", nil)
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
 
+	_, res, engine, _ := initHandler(t)
 
+	req := makeRequest(t, http.MethodGet, "/test", nil)
+
+	engine.ServeHTTP(res, req)
 
 	got := res.Body.String()
 	want := "This is a test"
@@ -29,10 +36,23 @@ func TestTest(t *testing.T) {
 
 func TestCreateMatch(t *testing.T) {
 	name := "gordon"
+
+	ctx, res, engine, mockUseCase := initHandler(t)
+
+	id := models.NewMatchId()
+	match := &models.Match{
+		Id:    id,
+		Name:  name,
+		Moves: nil,
+	}
+	mockUseCase.EXPECT().Create(ctx, match)
+
 	data := url.Values{}
 	data.Set("name", name)
+	req := makeRequest(t, http.MethodPost, "/match", strings.NewReader(data.Encode()))
 
-	res := serveRequest(t, http.MethodPost, "/match", strings.NewReader(data.Encode()))
+	engine.ServeHTTP(res, req)
+
 	got := res.Body.String()
 	want := name
 
@@ -41,36 +61,26 @@ func TestCreateMatch(t *testing.T) {
 
 }
 
-func serveRequest(t *testing.T, method, url string, body io.Reader) *httptest.ResponseRecorder {
-	server := getMockServer(t)
-
+func makeRequest(t *testing.T, method, url string, body io.Reader) *http.Request {
 	req, _ := http.NewRequest(method, url, body)
-	res := httptest.NewRecorder()
 
 	switch method {
 	case http.MethodPost:
 		req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 	}
 
-	server.ServeHTTP(res, req)
-	return  res
+	return req
 }
 
-func newMockServer(t *testing.T) *gin.Engine {
-	gin.SetMode(gin.ReleaseMode)
-	router := gin.Default()
-
+func initHandler(t *testing.T) (ctx context.Context, res *httptest.ResponseRecorder, engine *gin.Engine, mockUseCase *mock_usecase.MockMatch) {
 	ctrl := gomock.NewController(t)
-	mockMatchUseCase := mock_usecase.NewMockMatch(ctrl)
-	NewMatchHandler(router, mockMatchUseCase)
+	gin.SetMode(gin.ReleaseMode)
+	defer ctrl.Finish()
 
-	return router
-}
+	res = httptest.NewRecorder()
+	ctx, engine = gin.CreateTestContext(res)
+	mockUseCase = mock_usecase.NewMockMatch(ctrl)
+	NewMatchHandler(engine, mockUseCase)
 
-func getMockServer(t *testing.T) *gin.Engine {
-	if mockServer != nil {
-		return mockServer
-	}
-	mockServer = newMockServer(t)
-	return mockServer
+	return
 }
