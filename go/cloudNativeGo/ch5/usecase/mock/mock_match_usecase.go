@@ -35,16 +35,31 @@ func (m *MockMatch) EXPECT() *MockMatchMockRecorder {
 }
 
 // Create mocks base method
-func (m *MockMatch) Create(ctx context.Context, match *models.Match) (*models.Match, error) {
+func (m *MockMatch) Create(ctx context.Context, name string) (*models.Match, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Create", ctx, match)
+	ret := m.ctrl.Call(m, "Create", ctx, name)
 	ret0, _ := ret[0].(*models.Match)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Create indicates an expected call of Create
-func (mr *MockMatchMockRecorder) Create(ctx, match interface{}) *gomock.Call {
+func (mr *MockMatchMockRecorder) Create(ctx, name interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockMatch)(nil).Create), ctx, match)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockMatch)(nil).Create), ctx, name)
+}
+
+// GetByName mocks base method
+func (m *MockMatch) GetByName(ctx context.Context, name string) (*models.Match, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetByName", ctx, name)
+	ret0, _ := ret[0].(*models.Match)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetByName indicates an expected call of GetByName
+func (mr *MockMatchMockRecorder) GetByName(ctx, name interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByName", reflect.TypeOf((*MockMatch)(nil).GetByName), ctx, name)
 }

@@ -1,12 +1,12 @@
 package http
 
 import (
+	"encoding/json"
 	"github.com/GordonChen13/learn-examples/go/cloudNativeGo/ch5/models"
 	"github.com/GordonChen13/learn-examples/go/cloudNativeGo/ch5/usecase/mock"
 	"github.com/gin-gonic/gin"
 	"github.com/golang/mock/gomock"
 	"github.com/magiconair/properties/assert"
-	"golang.org/x/net/context"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -21,7 +21,7 @@ func TestTest(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	_, res, engine, _ := initHandler(t)
+	res, engine, _ := initHandler(t)
 
 	req := makeRequest(t, http.MethodGet, "/test", nil)
 
@@ -37,7 +37,7 @@ func TestTest(t *testing.T) {
 func TestCreateMatch(t *testing.T) {
 	name := "gordon"
 
-	ctx, res, engine, mockUseCase := initHandler(t)
+	res, engine, mockUseCase := initHandler(t)
 
 	id := models.NewMatchId()
 	match := &models.Match{
@@ -45,7 +45,7 @@ func TestCreateMatch(t *testing.T) {
 		Name:  name,
 		Moves: nil,
 	}
-	mockUseCase.EXPECT().Create(ctx, match)
+	mockUseCase.EXPECT().Create(gomock.Any(), name).Return(match, nil)
 
 	data := url.Values{}
 	data.Set("name", name)
@@ -53,12 +53,37 @@ func TestCreateMatch(t *testing.T) {
 
 	engine.ServeHTTP(res, req)
 
-	got := res.Body.String()
-	want := name
+	got := &models.Match{}
+	json.NewDecoder(res.Body).Decode(got)
 
 	assert.Equal(t, res.Code, 201)
-	assert.Equal(t, got, want)
+	assert.Equal(t, got.Name, name)
+}
 
+func TestMatchHandler_GetByName(t *testing.T) {
+	name := "gordon"
+
+	res, engine, mockUseCase := initHandler(t)
+
+	id := models.NewMatchId()
+	match := &models.Match{
+		Id:    id,
+		Name:  name,
+		Moves: nil,
+	}
+	mockUseCase.EXPECT().Create(gomock.Any(), name).Return(match, nil)
+
+	data := url.Values{}
+	data.Set("name", name)
+	req := makeRequest(t, http.MethodPost, "/match", strings.NewReader(data.Encode()))
+
+	engine.ServeHTTP(res, req)
+
+	got := &models.Match{}
+	json.NewDecoder(res.Body).Decode(got)
+
+	assert.Equal(t, res.Code, 201)
+	assert.Equal(t, got.Name, name)
 }
 
 func makeRequest(t *testing.T, method, url string, body io.Reader) *http.Request {
@@ -72,13 +97,14 @@ func makeRequest(t *testing.T, method, url string, body io.Reader) *http.Request
 	return req
 }
 
-func initHandler(t *testing.T) (ctx context.Context, res *httptest.ResponseRecorder, engine *gin.Engine, mockUseCase *mock_usecase.MockMatch) {
+func initHandler(t *testing.T) (res *httptest.ResponseRecorder, engine *gin.Engine, mockUseCase *mock_usecase.MockMatch) {
 	ctrl := gomock.NewController(t)
-	gin.SetMode(gin.ReleaseMode)
 	defer ctrl.Finish()
 
 	res = httptest.NewRecorder()
-	ctx, engine = gin.CreateTestContext(res)
+
+	gin.SetMode(gin.ReleaseMode)
+	_, engine = gin.CreateTestContext(res)
 	mockUseCase = mock_usecase.NewMockMatch(ctrl)
 	NewMatchHandler(engine, mockUseCase)
 

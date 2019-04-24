@@ -6,5 +6,6 @@ import (
 )
 
 type Match interface {
-	Create(ctx context.Context, match *models.Match) (res *models.Match, err error)
+	Create(ctx context.Context, name string) (res *models.Match, err error)
+	GetByName(ctx context.Context, name string) (res *models.Match, err error)
 }
