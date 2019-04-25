@@ -16,8 +16,8 @@ type MatchRepository struct {
 }
 
 const (
-	DB_name = "user"
-	Collection_name = "match"
+	DbName = "users"
+	CollectionName = "match"
 )
 
 func NewMatchRepository() (*MatchRepository, error) {
@@ -83,5 +83,5 @@ func (m *MatchRepository) GetByName(ctx context.Context, name string) (*models.M
 }
 
 func (m *MatchRepository) getMatchCollection() *mongo.Collection {
-	return m.Client.Database(DB_name).Collection(Collection_name)
+	return m.Client.Database(DbName).Collection(CollectionName)
 }

@@ -1,8 +1,9 @@
-package http
+package main
 
 import (
 	"fmt"
 	"github.com/spf13/viper"
+	"log"
 )
 
 func main() {
@@ -13,7 +14,11 @@ func main() {
 	}
 
 	router := NewServer()
-	router.Run(":" + port)
+	err := router.Run(":" + port)
+
+	if err != nil {
+		log.Fatalf("gin run error, %s", err)
+	}
 }
 
 func init() {

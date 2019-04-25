@@ -32,4 +32,24 @@ func (m *MatchUseCase) Create(ctx context.Context, name string) (*models.Match, 
 	return match, nil
 }
 
+func (m *MatchUseCase) GetById(ctx context.Context, id string) (*models.Match, error) {
+	match, err := m.Repository.GetById(ctx, id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return match, nil
+}
+
+func (m *MatchUseCase) GetByName(ctx context.Context, name string) (*models.Match, error) {
+	match, err := m.Repository.GetByName(ctx, name)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return match, nil
+}
+
 
