@@ -1,0 +1,17 @@
+{
+  "debug": true,
+  "server": {
+    "address": ":3000"
+  },
+  "context":{
+    "timeout":2
+  },
+  "database": {
+    "host": "mongodb",
+    "port": "27017",
+    "user": "user",
+    "pass": "password",
+    "name": "user"
+  }
+
+}

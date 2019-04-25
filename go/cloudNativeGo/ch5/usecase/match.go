@@ -8,4 +8,5 @@ import (
 type Match interface {
 	Create(ctx context.Context, name string) (res *models.Match, err error)
 	GetByName(ctx context.Context, name string) (res *models.Match, err error)
+	GetById(ctx context.Context, id string) (res *models.Match, err error)
 }
