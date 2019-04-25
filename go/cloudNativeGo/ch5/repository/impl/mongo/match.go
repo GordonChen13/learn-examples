@@ -31,7 +31,7 @@ func NewMatchRepository() (*MatchRepository, error) {
 	if err != nil {
 		return nil, err
 	}
-	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	err = client.Connect(ctx)
 	if err != nil {
@@ -45,7 +45,11 @@ func NewMatchRepository() (*MatchRepository, error) {
 func (m *MatchRepository) Store(ctx context.Context, match *models.Match) error {
 	collection := m.getMatchCollection()
 
-	_, err := collection.InsertOne(ctx, match)
+	data := bson.M{
+		"id" : match.Id,
+		"name" : match.Name,
+	}
+	_, err := collection.InsertOne(ctx, data)
 
 	if err != nil {
 		return err

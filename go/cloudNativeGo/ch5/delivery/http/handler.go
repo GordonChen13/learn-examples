@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/GordonChen13/learn-examples/go/cloudNativeGo/ch5/usecase"
 	"github.com/gin-gonic/gin"
+	"log"
 	"net/http"
 )
 
@@ -18,6 +19,7 @@ func NewMatchHandler(router *gin.Engine, matchUseCase usecase.Match) {
 	router.GET("/test", handler.Test)
 	router.POST("/match", handler.CreateMatch)
 	router.GET("/match", handler.QueryMatch)
+	router.GET("/match/name", handler.GetMatchByName)
 }
 
 func (m *MatchHandler) Test(c *gin.Context) {
@@ -37,21 +39,23 @@ func (m *MatchHandler) CreateMatch(c *gin.Context) {
 }
 
 func (m *MatchHandler) QueryMatch(c *gin.Context)  {
-	name := c.Param("name")
+	name := c.Query("name")
 	if name != "" {
 		m.GetMatchByName(c)
 	}
 
-	id := c.Param("id")
+	id := c.Query("id")
 	if id!= "" {
 		m.GetMatchById(c)
 	}
 }
 
 func (m *MatchHandler) GetMatchByName(c *gin.Context) {
-	name := c.Param("name")
+	name := c.Query("name")
+	log.Println(name)
 
 	res, err := m.useCase.GetByName(c, name)
+	log.Println(res)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err)
@@ -61,7 +65,7 @@ func (m *MatchHandler) GetMatchByName(c *gin.Context) {
 }
 
 func (m *MatchHandler) GetMatchById(c *gin.Context)  {
-	id := c.Param("id")
+	id := c.Query("id")
 
 	res, err := m.useCase.GetById(c, id)
 

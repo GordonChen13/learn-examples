@@ -7,14 +7,14 @@ import (
 )
 
 func main() {
-	port := viper.GetString(`server.address`)
+	address := viper.GetString(`server.address`)
 
-	if len(port) == 0 {
-		port = "3000"
+	if len(address) == 0 {
+		address = "3000"
 	}
 
 	router := NewServer()
-	err := router.Run(":" + port)
+	err := router.Run(address)
 
 	if err != nil {
 		log.Fatalf("gin run error, %s", err)

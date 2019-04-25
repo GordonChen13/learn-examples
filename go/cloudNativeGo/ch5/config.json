@@ -1,7 +1,7 @@
 {
   "debug": true,
   "server": {
-    "address": ":3000"
+    "address": ":5000"
   },
   "context":{
     "timeout":2
