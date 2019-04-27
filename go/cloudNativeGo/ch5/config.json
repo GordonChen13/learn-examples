@@ -7,11 +7,12 @@
     "timeout":2
   },
   "database": {
-    "host": "mongodb",
+    "driver": "mongodb",
+    "host": "localhost",
     "port": "27017",
-    "user": "user",
-    "pass": "password",
-    "name": "user"
+    "user": "gordon",
+    "pass": "123456",
+    "name": "users"
   }
 
 }

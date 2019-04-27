@@ -5,6 +5,7 @@ import (
 	"github.com/GordonChen13/learn-examples/go/cloudNativeGo/ch5/models"
 	"github.com/spf13/viper"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo/readpref"
 	"golang.org/x/net/context"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -23,9 +24,10 @@ const (
 func NewMatchRepository() (*MatchRepository, error) {
 	dbHost := viper.GetString(`database.host`)
 	dbPort := viper.GetString(`database.port`)
-	dbUser := viper.GetString(`database.user`)
-	dbPass := viper.GetString(`database.pass`)
-	uri := fmt.Sprintf("mongodb://%s:%s@%s:%s", dbUser, dbPass, dbHost, dbPort)
+	//dbUser := viper.GetString(`database.user`)
+	//dbPass := viper.GetString(`database.pass`)
+	//uri := fmt.Sprintf("mongodb://%s:%s@%s:%s", dbUser, dbPass, dbHost, dbPort)
+	uri := fmt.Sprintf("mongodb://%s:%s", dbHost, dbPort)
 
 	client, err := mongo.NewClient(options.Client().ApplyURI(uri))
 	if err != nil {
@@ -34,6 +36,9 @@ func NewMatchRepository() (*MatchRepository, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	err = client.Connect(ctx)
+
+	ctxPing, _ := context.WithTimeout(context.Background(), 2*time.Second)
+	err = client.Ping(ctxPing, readpref.Primary())
 	if err != nil {
 		return nil, err
 	}
