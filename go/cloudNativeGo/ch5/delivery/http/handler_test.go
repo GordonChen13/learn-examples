@@ -71,25 +71,15 @@ func TestMatchHandler_GetByName(t *testing.T) {
 		Name:  name,
 		Moves: nil,
 	}
-	mockUseCase.EXPECT().Create(gomock.Any(), name).Return(match, nil)
-
-	data := url.Values{}
-	data.Set("name", name)
-	req := makeRequest(t, http.MethodPost, "/match", strings.NewReader(data.Encode()))
-
-	engine.ServeHTTP(res, req)
-
-	want := &models.Match{}
-	json.NewDecoder(res.Body).Decode(want)
 
 	mockUseCase.EXPECT().GetByName(gomock.Any(), name).Return(match, nil)
-	req = makeRequest(t, http.MethodGet, "/match/" + name, nil)
+	req := makeRequest(t, http.MethodGet, "/match?name=" + name, nil)
 	engine.ServeHTTP(res, req)
 	got := &models.Match{}
 	json.NewDecoder(res.Body).Decode(got)
 
 	assert.Equal(t, res.Code, 200)
-	assert.Equal(t, want.Id, got.Id)
+	assert.Equal(t, got.Id, match.Id)
 }
 
 func TestMatchHandler_GetById(t *testing.T) {
@@ -103,25 +93,15 @@ func TestMatchHandler_GetById(t *testing.T) {
 		Name:  name,
 		Moves: nil,
 	}
-	mockUseCase.EXPECT().Create(gomock.Any(), name).Return(match, nil)
 
-	data := url.Values{}
-	data.Set("name", name)
-	req := makeRequest(t, http.MethodPost, "/match", strings.NewReader(data.Encode()))
-
-	engine.ServeHTTP(res, req)
-
-	want := &models.Match{}
-	json.NewDecoder(res.Body).Decode(want)
-
-	mockUseCase.EXPECT().GetById(gomock.Any(), id).Return(match, nil)
-	req = makeRequest(t, http.MethodGet, "/match/" + string(id), nil)
+	mockUseCase.EXPECT().GetById(gomock.Any(), string(id)).Return(match, nil)
+	req := makeRequest(t, http.MethodGet, "/match?id=" + string(id), nil)
 	engine.ServeHTTP(res, req)
 	got := &models.Match{}
 	json.NewDecoder(res.Body).Decode(got)
 
 	assert.Equal(t, res.Code, 200)
-	assert.Equal(t, want.Name, got.Name)
+	assert.Equal(t, got.Name, match.Name)
 }
 
 

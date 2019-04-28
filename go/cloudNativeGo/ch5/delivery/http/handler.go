@@ -19,7 +19,6 @@ func NewMatchHandler(router *gin.Engine, matchUseCase usecase.Match) {
 	router.GET("/test", handler.Test)
 	router.POST("/match", handler.CreateMatch)
 	router.GET("/match", handler.QueryMatch)
-	router.GET("/match/name", handler.GetMatchByName)
 }
 
 func (m *MatchHandler) Test(c *gin.Context) {
@@ -61,17 +60,18 @@ func (m *MatchHandler) GetMatchByName(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, err)
 	}
 
-	c.JSON(http.StatusCreated, res)
+	c.JSON(http.StatusOK, res)
 }
 
 func (m *MatchHandler) GetMatchById(c *gin.Context)  {
 	id := c.Query("id")
 
 	res, err := m.useCase.GetById(c, id)
+	log.Println(res, err)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err)
 	}
 
-	c.JSON(http.StatusCreated, res)
+	c.JSON(http.StatusOK, res)
 }
