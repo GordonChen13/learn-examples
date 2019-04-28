@@ -63,3 +63,18 @@ func (mr *MockMatchMockRecorder) GetByName(ctx, name interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByName", reflect.TypeOf((*MockMatch)(nil).GetByName), ctx, name)
 }
+
+// GetById mocks base method
+func (m *MockMatch) GetById(ctx context.Context, id string) (*models.Match, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetById", ctx, id)
+	ret0, _ := ret[0].(*models.Match)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetById indicates an expected call of GetById
+func (mr *MockMatchMockRecorder) GetById(ctx, id interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetById", reflect.TypeOf((*MockMatch)(nil).GetById), ctx, id)
+}
