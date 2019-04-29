@@ -9,6 +9,8 @@ import (
 	"golang.org/x/net/context"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"log"
+	"strconv"
 	"time"
 )
 
@@ -67,7 +69,9 @@ func (m *MatchRepository) GetById(ctx context.Context, id string) (*models.Match
 	match := &models.Match{}
 	collection := m.getMatchCollection()
 
-	filter := bson.M{"id": id}
+	log.Println(id)
+	intId, _ := strconv.ParseInt(id, 10, 64)
+	filter := bson.M{"id": intId}
 	err := collection.FindOne(ctx, filter).Decode(match)
 
 	if err != nil {
