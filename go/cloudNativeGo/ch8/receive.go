@@ -1,17 +1,9 @@
 package main
 
 import (
-	"fmt"
 	"github.com/streadway/amqp"
 	"log"
 )
-
-func failOnError(err error, msg string) {
-	if err != nil {
-		log.Fatalf("%s: %s", msg, err)
-		panic(fmt.Sprintf("%s: %s", msg, err))
-	}
-}
 
 func main() {
 	conn, err := amqp.Dial("amqp://guest:guest@127.0.0.1:5672/")
@@ -29,19 +21,28 @@ func main() {
 		false,
 		false,
 		nil,
-		)
+	)
 	failOnError(err, "Failed to declare a queue")
 
-	body := "hello"
-	err = ch.Publish(
-		"",
+	msgs, err := ch.Consume(
 		q.Name,
+		"",
+		true,
 		false,
 		false,
-		amqp.Publishing{
-			ContentType:"text/plain",
-			Body: []byte(body),
-		})
-	log.Printf(" [x] Sent %s", body)
-	failOnError(err, "Failed to publish a message")
+		false,
+		nil,
+		)
+	failOnError(err, "Failed to register a consumer")
+
+	forever := make(chan bool)
+
+	go func() {
+		for d := range msgs {
+			log.Printf("Received a message: %s", d.Body)
+		}
+	}()
+
+	log.Printf(" [*] Waiting for messages. To exit press CTRL+C")
+    <-forever
 }
