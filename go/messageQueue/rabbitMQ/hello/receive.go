@@ -1,9 +1,17 @@
 package main
 
 import (
+	"fmt"
 	"github.com/streadway/amqp"
 	"log"
 )
+
+func failOnError(err error, msg string) {
+	if err != nil {
+		log.Fatalf("%s: %s", msg, err)
+		panic(fmt.Sprintf("%s: %s", msg, err))
+	}
+}
 
 func main() {
 	conn, err := amqp.Dial("amqp://guest:guest@127.0.0.1:5672/")
