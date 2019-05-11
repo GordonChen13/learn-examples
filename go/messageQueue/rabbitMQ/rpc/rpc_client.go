@@ -69,7 +69,7 @@ func fibonacciRPC(n int) (res int, err error) {
 		false,
 		amqp.Publishing{
 			ContentType: "text/plain",
-			CorrelationId:corrid,
+			CorrelationId:corrId,
 			ReplyTo:q.Name,
 			Body:[] byte(strconv.Itoa(n)),
 		})

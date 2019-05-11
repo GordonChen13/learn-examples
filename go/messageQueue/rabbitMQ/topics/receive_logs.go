@@ -22,8 +22,8 @@ func main() {
 	defer ch.Close()
 
 	err = ch.ExchangeDeclare(
-		"logs",
-		"fanout",
+		"logs_topic",
+		"topic",
 		true,
 		false,
 		false,
@@ -47,7 +47,7 @@ func main() {
 		os.Exit(0)
 	}
 	for _,s := range os.Args[1:] {
-		log.Printf("Binding queue %s to exchange %s with routing key %s", q.Name, "logs_direct", s)
+		log.Printf("Binding queue %s to exchange %s with topic %s", q.Name, "logs_topic", s)
 		err = ch.QueueBind(
 			q.Name,
 			s,
