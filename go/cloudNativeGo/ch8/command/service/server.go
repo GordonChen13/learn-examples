@@ -8,27 +8,31 @@ import (
 )
 
 func NewServer() *gin.Engine {
-	dispatcher := initDispatcher()
-	gin.SetMode(gin.ReleaseMode)
+	deliveryDispatcher := initDispatcher("delivery")
+	deliveryHandlers := NewHandlers(deliveryDispatcher)
+	alertDispatcher := initDispatcher("alert")
+	alertHandlers := NewHandlers(alertDispatcher)
+	positionDispatcher := initDispatcher("position")
+	positionHandlers := NewHandlers(positionDispatcher)
+	//gin.SetMode(gin.ReleaseMode)
 	engine := gin.Default()
 
-	handlers := NewHandlers(dispatcher)
-	initRouter(engine, handlers)
+	initRouter(engine, deliveryHandlers, alertHandlers, positionHandlers)
 
 	return engine
 }
 
-func initDispatcher() queueDispatcher {
+func initDispatcher(name  string) queueDispatcher {
 	conn, err := amqp.Dial("amqp://guest:guest@127.0.0.1:5672/")
 	failOnError(err,"Failed to connect to RabbitMQ")
-	defer conn.Close()
+	//defer conn.Close()
 
 	ch, err := conn.Channel()
 	failOnError(err, "Failed to open a channel")
-	defer ch.Close()
+	//defer ch.Close()
 
 	q, err := ch.QueueDeclare(
-		"hello",
+		name,
 		false,
 		false,
 		false,
@@ -38,7 +42,7 @@ func initDispatcher() queueDispatcher {
 	failOnError(err, "Failed to declare a queue")
 
 
-	dispatcher := NewAmqpDispatcher(ch, "test", false)
+	dispatcher := NewAmqpDispatcher(ch, q.Name, false)
 	return dispatcher
 }
 

@@ -28,6 +28,7 @@ func (h *Handlers) AddTelemetryCommand(ctx *gin.Context) {
 	temp, err := strconv.Atoi(ctx.PostForm("core_temp"))
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, err)
+		return
 	}
 
 	command := &telemetryCommand{
@@ -39,6 +40,7 @@ func (h *Handlers) AddTelemetryCommand(ctx *gin.Context) {
 	err = h.dispatch.DispatchMessage(command)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, err)
+		return
 	}
 	ctx.JSON(http.StatusCreated, command)
 }
@@ -56,6 +58,7 @@ func (h *Handlers) AddAlertCommand(ctx *gin.Context)  {
 	descriptin := ctx.PostForm("description")
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, err)
+		return
 	}
 
 	command := &alertCommand{
@@ -66,6 +69,7 @@ func (h *Handlers) AddAlertCommand(ctx *gin.Context)  {
 	err = h.dispatch.DispatchMessage(command)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, err)
+		return
 	}
 	ctx.JSON(http.StatusCreated, command)
 }
@@ -100,6 +104,7 @@ func (h *Handlers) AddPositionCommand(ctx *gin.Context) {
 	err = h.dispatch.DispatchMessage(command)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, err)
+		return
 	}
 	ctx.JSON(http.StatusCreated, command)
 }

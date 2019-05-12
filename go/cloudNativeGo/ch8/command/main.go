@@ -5,5 +5,5 @@ import "github.com/GordonChen13/learn-examples/go/cloudNativeGo/ch8/command/serv
 func main()  {
 	server := service.NewServer()
 
-	server.Run(":8080")
+	server.Run(":3000")
 }
