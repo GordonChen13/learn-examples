@@ -10,6 +10,6 @@ const (
 
 type eventRepository interface {
 	UpdateLastTelemetryEvent(telemetryEvent common.TelemetryUpdatedEvent) (err error)
-	UpdateLastAlertEvent(alertEvent, event common.AlertSignalledEvent) (err error)
+	UpdateLastAlertEvent(alertEvent common.AlertSignalledEvent) (err error)
 	UpdateLastPositionEvent(positionEvent common.PositionChangedEvent) (err error)
 }
