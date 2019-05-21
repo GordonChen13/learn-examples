@@ -1,4 +1,4 @@
-module demo
+module github.com/GordonChen13/learn-examples/go/kratos/demo
 
 go 1.12
 

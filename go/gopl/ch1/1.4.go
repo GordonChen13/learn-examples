@@ -3,42 +3,53 @@ package main
 import (
 	"bufio"
 	"fmt"
-    "log"
 	"os"
 )
 
+var files []string = os.Args[1:]
+var linesStdin = map[string]int{}
+var counts = map[string]map[string]int{}
+
 func main() {
-	files := os.Args[1:]
-	var counts []map[string]int
 	if len(files) == 0 {
-        log.Fatal("you need to input a file")
+		countStdin(os.Stdin, linesStdin)
+		for line, n := range linesStdin {
+			if n > 1 {
+				fmt.Printf("%s\t%d\n", line, n)
+			}
+		}
 	} else {
 		for _, arg := range files {
+			counts[arg] = map[string]int{}
 			f, err := os.Open(arg)
 			if err != nil {
 				fmt.Fprintf(os.Stderr, "dup2: %v\n", err)
 				continue
 			}
-			count := countLines(f)
-			counts = append(counts, count)
+			countLines(f, counts)
 			f.Close()
 		}
-	}
-
-	for i, count := range counts {
-		for _, n := range count {
-			if n > 1 {
-				fmt.Printf("%d\t %s\n", n ,files[i])
+		for fileName, innerMap := range counts {
+			for line, n := range innerMap {
+				if n > 1 {
+					fmt.Printf("%s\t%s\t%d\n", fileName, line, n)
+				}
 			}
 		}
 	}
 }
 
-func countLines(f *os.File) (counts map[string]int) {
-	input := bufio.NewScanner(os.Stdin)
+func countStdin(f *os.File, linesStdin map[string]int) {
+	input := bufio.NewScanner(f)
 	for input.Scan() {
-		counts[input.Text()]++
+		linesStdin[input.Text()]++
 	}
 
-	return
+}
+
+func countLines(f *os.File, counts map[string]map[string]int) {
+	input := bufio.NewScanner(f)
+	for input.Scan() {
+		counts[f.Name()][input.Text()]++
+	}
 }
