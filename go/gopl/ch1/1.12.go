@@ -20,6 +20,9 @@ func main() {
 }
 
 func handler2(w http.ResponseWriter, r *http.Request) {
+	if err := r.ParseForm(); err != nil {
+		log.Print(err)
+	}
 	cycles, _ := strconv.Atoi(r.Form["cycles"][0])
 	size, _ := strconv.Atoi(r.Form["size"][0])
 	nframes, _ := strconv.Atoi(r.Form["nframes"][0])
@@ -37,10 +40,10 @@ func lissajous2(out io.Writer, cycles, size ,nframes, delay int, res float64) {
 	for i := 0; i < nframes; i++ {
 		rect := image.Rect(0, 0, 2*size+1, 2*size+1)
 		img := image.NewPaletted(rect, palette)
-		for t := 0.0; t < cycles*2*math.Pi; t += res {
+		for t := 0.0; t < float64(cycles)*2*math.Pi; t += res {
 			x := math.Sin(t)
 			y := math.Sin(t*freq + phase)
-			img.Set(size+int(x*size+0.5), size+int(y*size+0.5), green)
+			img.Set(size+int(x*float64(size)+0.5), size+int(y*float64(size)+0.5), green)
 		}
 		phase += 0.1
 		anim.Delay = append(anim.Delay, delay)
