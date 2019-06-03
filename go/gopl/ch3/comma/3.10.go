@@ -5,6 +5,11 @@ import "bytes"
 func CommaB(s string) string {
 	var buf bytes.Buffer
 	n := len(s)
+	if n <= 3 {
+		buf.WriteString(s)
+		return buf.String()
+	}
+
 	l := n%3
 	if l == 0 {
 		l  = 3
