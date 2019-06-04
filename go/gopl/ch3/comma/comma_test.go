@@ -24,7 +24,7 @@ func TestComma(t *testing.T) {
 	}
 }
 
-func TestComma10(t *testing.T) {
+func TestCommaB(t *testing.T) {
 	cs := []struct {
 		name string
 		input string
@@ -42,6 +42,27 @@ func TestComma10(t *testing.T) {
 		})
 	}
 }
+
+func TestCommaC(t *testing.T) {
+	cs := []struct {
+		name string
+		input string
+		want string
+	}{
+		{"return -100 when input -100", "-100", "-100"},
+		{"return 999,999.99999 when input 99999.99999", "999999.99999", "999,999.99999"},
+		{"return 9,999,999 when input 9999999", "9999999", "9,999,999"},
+		{"return -100,000,000.9 when input -100000000.9", "-100000000.9", "-100,000,000.9"},
+	}
+
+	for _, c := range cs {
+		t.Run(c.name, func(t *testing.T) {
+			get := CommaC(c.input)
+			assert.Equal(t, c.want, get)
+		})
+	}
+}
+
 
 func BenchmarkComma100(b *testing.B) {
 	for i := 0; i < b.N; i++ {
