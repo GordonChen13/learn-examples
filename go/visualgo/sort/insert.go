@@ -9,7 +9,7 @@ func Insert(nums []int) []int {
 		j := i-1
 		for ; j >= 0 && nums[j] > x; j-- {
 			nums[j+1] = nums[j]
-			nums[j+1] = x
+			nums[j] = x
 		}
 	}
 
