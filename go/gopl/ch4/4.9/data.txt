@@ -1,0 +1,6 @@
+hello, world
+你好，世界
+hello, gordon
+你好，先生
+1，2，3，4，5，10，100
+啊，啊，a,b,bbc
