@@ -1,0 +1,27 @@
+version: '3.7'
+services:
+  mysqlmaster:
+    image: mysql:latest
+    environment:
+      - "MYSQL_ROOT_PASSWORD=root"
+    volumes:
+      - ./data/master:/var/lib/mysql
+      - ./config/master.cnf:/etc/mysql/conf.d/
+  mysqlslave:
+    image: mysql:latest
+    environment:
+      - "MYSQL_ROOT_PASSWORD=root"
+    volumes:
+      - ./data/slave:/var/lib/mysql
+      - ./config/slave.cnf:/etc/mysql/conf.d/
+  mysqlconfig:
+    image: mysql:latest
+    environment:
+      - "MYSQL_ROOT_PASSWORD=root"
+      - "MYSQL_MASTER_PASSWORD=root"
+      - "MYSQL_SLAVE_PASSWORD=root"
+      - "MYSQL_REPLICATION_USER=repl"
+      - "MYSQL_REPLICATION_PASSWORD=repl"
+    volumes:
+      - ./mysql_connector.sh:/tmp/mysql_connector.sh
+    command: /bin/bash -x /tmp/mysql_connector.sh
