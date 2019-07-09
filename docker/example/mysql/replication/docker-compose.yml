@@ -5,14 +5,14 @@ services:
     environment:
       - "MYSQL_ROOT_PASSWORD=root"
     volumes:
-      - ./data/master:/var/lib/mysql
+      - ./data/master:/var/lib/mysql/
       - ./config/master.cnf:/etc/mysql/conf.d/
   mysqlslave:
     image: mysql:latest
     environment:
       - "MYSQL_ROOT_PASSWORD=root"
     volumes:
-      - ./data/slave:/var/lib/mysql
+      - ./data/slave:/var/lib/mysql/
       - ./config/slave.cnf:/etc/mysql/conf.d/
   mysqlconfig:
     image: mysql:latest
