@@ -1,4 +1,6 @@
-package intset
+package intset_test
+
+import "github.com/GordonChen13/learn-examples/go/gopl/ch6/intset"
 
 import (
 	"github.com/stretchr/testify/assert"
@@ -6,21 +8,21 @@ import (
 )
 
 func TestIntSet_Len(t *testing.T) {
-	set1 := &IntSet{}
+	set1 := &intset.IntSet{}
 	set1.Add(100)
-	set2 := &IntSet{}
+	set2 := &intset.IntSet{}
 	set2.Add(100)
 	set2.Add(1000)
-	set3 := &IntSet{}
+	set3 := &intset.IntSet{}
 	set3.Add(1)
 	set3.Add(1000)
 	set3.Add(1000000)
 	cases := []struct{
 		name string
-		set *IntSet
+		set *intset.IntSet
 		want int
 	} {
-		{"return 0 when empty", &IntSet{}, 0},
+		{"return 0 when empty", &intset.IntSet{}, 0},
 		{"return 1", set1, 1},
 		{"return 2", set2, 2},
 		{"return 3", set3, 3},
@@ -35,7 +37,7 @@ func TestIntSet_Len(t *testing.T) {
 }
 
 func TestIntSet_Remove(t *testing.T) {
-	set3 := &IntSet{}
+	set3 := &intset.IntSet{}
 	set3.Add(1)
 	set3.Add(1000)
 	set3.Add(1000000)
@@ -48,7 +50,7 @@ func TestIntSet_Remove(t *testing.T) {
 }
 
 func TestIntSet_Clear(t *testing.T) {
-	set3 := &IntSet{}
+	set3 := &intset.IntSet{}
 	set3.Add(1)
 	set3.Add(1000)
 	set3.Add(1000000)
@@ -60,7 +62,7 @@ func TestIntSet_Clear(t *testing.T) {
 }
 
 func TestIntSet_Copy(t *testing.T) {
-	set3 := &IntSet{}
+	set3 := &intset.IntSet{}
 	set3.Add(1)
 	set3.Add(1000)
 	set3.Add(1000000)
