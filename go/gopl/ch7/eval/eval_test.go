@@ -31,7 +31,7 @@ func TestEval(t *testing.T) {
 			t.Error(err) // parse error
 			continue
 		}
-		got := fmt.Sprintf("%.6g", Eval(test.env))
+		got := fmt.Sprintf("%.6g", expr.Eval(test.env))
 		fmt.Printf("\t%v => %s\n", test.env, got)
 		if got != test.want {
 			t.Errorf("%s.Eval() in %v = %q, want %q\n",

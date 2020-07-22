@@ -9,10 +9,11 @@ import (
 	"time"
 )
 
-func handleConn(c net.Conn) {
+func handleConn(c net.Conn, location *time.Location) {
 	defer c.Close()
 	for {
-		_, err := io.WriteString(c, time.Now().Format("15:04:05\n"))
+		now := time.Now()
+		_, err := io.WriteString(c, now.In(location).Format("15:04:05\n"))
 		if err != nil {
 			return // e.g., client disconnected
 		}
@@ -22,7 +23,12 @@ func handleConn(c net.Conn) {
 
 func main() {
 	port := flag.String("port", "8000", "listen port")
+	zone := flag.String("zone", "Asia/Shanghai", "timezone")
 	flag.Parse()
+	location, err := time.LoadLocation(*zone)
+	if err != nil {
+		log.Fatal(err)
+	}
 	fmt.Println("Listening to", *port)
 	listener, err := net.Listen("tcp", "localhost:"+*port)
 	if err != nil {
@@ -34,6 +40,6 @@ func main() {
 			log.Print(err) // e.g., connection aborted
 			continue
 		}
-		go handleConn(conn) // handle connections concurrently
+		go handleConn(conn, location) // handle connections concurrently
 	}
 }
