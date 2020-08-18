@@ -31,6 +31,7 @@ func makeThumbnails(filenames []string) {
 	}
 }
 
+// NOTE: incorrect!
 func makeThumbnails2(filenames []string) {
 	for _, f := range filenames {
 		go ImageFile(f)
