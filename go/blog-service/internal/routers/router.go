@@ -16,7 +16,7 @@ func NewRouter() *gin.Engine {
 	{
 		apiV1.POST("/tags", tag.Get)
 		apiV1.DELETE("/tags/:id", tag.Delete)
-		apiV1.PUT("/tags/:id", tag.Update)
+		apiV1.PUT("/tgtags/:id", tag.Update)
 		apiV1.PATCH("/tags/:id/state", tag.Update)
 		apiV1.GET("/tags", tag.List)
 
