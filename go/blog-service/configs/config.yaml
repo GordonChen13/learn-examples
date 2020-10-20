@@ -11,12 +11,12 @@ App:
   LogFileExt: .log
 Database:
   DBType: mysql
-  Username: root
+  Username: gordon
   Password: 123456
   Host: 127.0.0.1:3306
   DBName: blog_service
   TablePrefix: blog_
-  Charset: utf8
+  Charset: utf8mb4
   ParseTime: true
   MaxIdleConns: 10
   MaxOpenConns: 30

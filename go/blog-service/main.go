@@ -5,6 +5,8 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/GordonChen13/learn-examples/go/blog-service/internal/model"
+
 	"github.com/gin-gonic/gin"
 
 	"github.com/GordonChen13/learn-examples/go/blog-service/global"
@@ -16,6 +18,10 @@ func init() {
 	err := setupSetting()
 	if err != nil {
 		log.Fatalf("init setupSetting err: %s", err)
+	}
+	err = setupDBEngine()
+	if err != nil {
+		log.Fatalf("init setupDBEngine err: %s", err)
 	}
 }
 
@@ -52,5 +58,14 @@ func setupSetting() error {
 
 	global.ServerSetting.ReadTimeOut *= time.Second
 	global.ServerSetting.WriteTimeOut *= time.Second
+	return nil
+}
+
+func setupDBEngine() error {
+	var err error
+	global.DBEngine, err = model.NewDBEngine(global.DatabaseSetting)
+	if err != nil {
+		return err
+	}
 	return nil
 }
