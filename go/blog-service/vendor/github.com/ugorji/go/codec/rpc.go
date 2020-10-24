@@ -41,15 +41,12 @@ type rpcCodec struct {
 
 	dec *Decoder
 	enc *Encoder
-	// bw  *bufio.Writer
-	// br  *bufio.Reader
-	h Handle
+	h   Handle
 
 	cls atomicClsErr
 }
 
 func newRPCCodec(conn io.ReadWriteCloser, h Handle) rpcCodec {
-	// return newRPCCodec2(bufio.NewReader(conn), bufio.NewWriter(conn), conn, h)
 	return newRPCCodec2(conn, conn, conn, h)
 }
 
@@ -87,46 +84,46 @@ func newRPCCodec2(r io.Reader, w io.Writer, c io.Closer, h Handle) rpcCodec {
 }
 
 func (c *rpcCodec) write(obj1, obj2 interface{}, writeObj2 bool) (err error) {
-	if err = c.ready(); err != nil {
-		return
-	}
-	err = c.enc.Encode(obj1)
-	if err == nil && writeObj2 {
-		err = c.enc.Encode(obj2)
-	}
-	if c.f != nil {
-		if err2 := c.f.Flush(); err == nil {
-			// ignore flush error if prior error occurred during Encode
-			err = err2
+	err = c.ready()
+	if err == nil {
+		err = c.enc.Encode(obj1)
+		if err == nil && writeObj2 {
+			err = c.enc.Encode(obj2)
+		}
+		if c.f != nil {
+			flushErr := c.f.Flush()
+			if err == nil {
+				// ignore flush error if prior error occurred during Encode
+				err = flushErr
+			}
 		}
 	}
 	return
 }
 
 func (c *rpcCodec) read(obj interface{}) (err error) {
-	if err = c.ready(); err != nil {
-		return
+	err = c.ready()
+	if err == nil {
+		//If nil is passed in, we should read and discard
+		if obj == nil {
+			// return c.dec.Decode(&obj)
+			err = c.dec.swallowErr()
+		} else {
+			err = c.dec.Decode(obj)
+		}
 	}
-	//If nil is passed in, we should read and discard
-	if obj == nil {
-		// var obj2 interface{}
-		// return c.dec.Decode(&obj2)
-		defer panicToErr(c.dec, &err)
-		c.dec.swallow()
-		return
-	}
-	return c.dec.Decode(obj)
+	return
 }
 
 func (c *rpcCodec) Close() (err error) {
 	if c.c != nil {
 		cls := c.cls.load()
 		if !cls.closed {
-			cls.errClosed = c.c.Close()
+			cls.err = c.c.Close()
 			cls.closed = true
 			c.cls.store(cls)
 		}
-		err = cls.errClosed
+		err = cls.err
 	}
 	return
 }
@@ -137,7 +134,7 @@ func (c *rpcCodec) ready() (err error) {
 	} else {
 		cls := c.cls.load()
 		if cls.closed {
-			if err = cls.errClosed; err == nil {
+			if err = cls.err; err == nil {
 				err = errRpcIsClosed
 			}
 		}

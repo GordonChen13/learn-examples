@@ -62,7 +62,6 @@ type simpleEncDriver struct {
 	encDriverNoopContainerWriter
 	h *SimpleHandle
 	b [8]byte
-	_ [6]uint64 // padding (cache-aligned)
 	e Encoder
 }
 
@@ -156,7 +155,7 @@ func (e *simpleEncDriver) encLen(bd byte, length int) {
 func (e *simpleEncDriver) EncodeExt(v interface{}, xtag uint64, ext Ext) {
 	var bs []byte
 	if ext == SelfExt {
-		bs = e.e.blist.get(1024)[:0]
+		bs = e.e.blist.get(1024)
 		e.e.sideEncode(v, &bs)
 	} else {
 		bs = ext.WriteExt(v)
@@ -220,11 +219,7 @@ func (e *simpleEncDriver) EncodeTime(t time.Time) {
 		return
 	}
 	v, err := t.MarshalBinary()
-	if err != nil {
-		e.e.onerror(err)
-		return
-	}
-	// time.Time marshalbinary takes about 14 bytes.
+	e.e.onerror(err)
 	e.e.encWr.writen2(simpleVdTime, uint8(len(v)))
 	e.e.encWr.writeb(v)
 }
@@ -238,7 +233,6 @@ type simpleDecDriver struct {
 	_      bool
 	noBuiltInTypes
 	decDriverNoopContainerReader
-	_ [6]uint64 // padding
 	d Decoder
 }
 
@@ -257,7 +251,7 @@ func (d *simpleDecDriver) advanceNil() (null bool) {
 	}
 	if d.bd == simpleVdNil {
 		d.bdRead = false
-		null = true
+		return true // null = true
 	}
 	return
 }
@@ -436,7 +430,6 @@ func (d *simpleDecDriver) DecodeBytes(bs []byte, zerocopy bool) (bsOut []byte) {
 		if len(bs) == 0 && zerocopy {
 			bs = d.d.b[:]
 		}
-		// bsOut, _ = fastpathTV.DecSliceUint8V(bs, true, d.d)
 		slen := d.ReadArrayStart()
 		bs = usableByteSlice(bs, slen)
 		for i := 0; i < len(bs); i++ {
@@ -704,8 +697,6 @@ type SimpleHandle struct {
 	BasicHandle
 	// EncZeroValuesAsNil says to encode zero values for numbers, bool, string, etc as nil
 	EncZeroValuesAsNil bool
-
-	_ [7]uint64 // padding (cache-aligned)
 }
 
 // Name returns the name of the handle: simple

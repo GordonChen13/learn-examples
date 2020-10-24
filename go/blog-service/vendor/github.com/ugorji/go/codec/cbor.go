@@ -120,7 +120,7 @@ type cborEncDriver struct {
 	encDriverNoopContainerWriter
 	h *CborHandle
 	x [8]byte
-	_ [6]uint64 // padding
+
 	e Encoder
 }
 
@@ -144,7 +144,6 @@ func (e *cborEncDriver) EncodeFloat32(f float32) {
 	b := math.Float32bits(f)
 	if e.h.OptimumSize {
 		if h := floatToHalfFloatBits(b); halfFloatToFloatBits(h) == b {
-			// fmt.Printf("no 32-16 overflow: %v\n", f)
 			e.e.encWr.writen1(cborBdFloat16)
 			bigenHelper{e.x[:2], e.e.w()}.writeUint16(h)
 			return
@@ -220,7 +219,7 @@ func (e *cborEncDriver) EncodeExt(rv interface{}, xtag uint64, ext Ext) {
 	e.encUint(uint64(xtag), cborBaseTag)
 	if ext == SelfExt {
 		rv2 := baseRV(rv)
-		e.e.encodeValue(rv2, e.h.fnNoExt(rv2.Type()))
+		e.e.encodeValue(rv2, e.h.fnNoExt(rvType(rv2)))
 	} else if v := ext.ConvertExt(rv); v == nil {
 		e.EncodeNil()
 	} else {
@@ -325,7 +324,6 @@ type cborDecDriver struct {
 	st     bool // skip tags
 	_      bool // found nil
 	noBuiltInTypes
-	_ [6]uint64 // padding cache-aligned
 	d Decoder
 }
 
@@ -344,9 +342,13 @@ func (d *cborDecDriver) advanceNil() (null bool) {
 	}
 	if d.bd == cborBdNil || d.bd == cborBdUndefined {
 		d.bdRead = false
-		null = true
+		return true // null = true
 	}
 	return
+}
+
+func (d *cborDecDriver) TryNil() bool {
+	return d.advanceNil()
 }
 
 // skipTags is called to skip any tags in the stream.
@@ -385,10 +387,6 @@ func (d *cborDecDriver) ContainerType() (vt valueType) {
 		return valueTypeMap
 	}
 	return valueTypeUnset
-}
-
-func (d *cborDecDriver) TryNil() bool {
-	return d.advanceNil()
 }
 
 func (d *cborDecDriver) CheckBreak() (v bool) {
@@ -436,7 +434,6 @@ func (d *cborDecDriver) decCheckInteger() (neg bool) {
 }
 
 func cborDecInt64(ui uint64, neg bool) (i int64) {
-	// check if this number can be converted to an int without overflow
 	if neg {
 		i = -(chkOvf.SignedIntV(ui + 1))
 	} else {
@@ -467,7 +464,6 @@ func (d *cborDecDriver) decAppendIndefiniteBytes(bs []byte) []byte {
 			bs = bs[:newLen]
 		}
 		d.d.decRd.readb(bs[oldLen:newLen])
-		// bs = append(bs, d.d.decRd.readn()...)
 		d.bdRead = false
 	}
 	d.bdRead = false
@@ -651,9 +647,8 @@ func (d *cborDecDriver) decodeTime(xtag uint64) (t time.Time) {
 	switch xtag {
 	case 0:
 		var err error
-		if t, err = time.Parse(time.RFC3339, stringView(d.DecodeStringAsBytes())); err != nil {
-			d.d.onerror(err)
-		}
+		t, err = time.Parse(time.RFC3339, stringView(d.DecodeStringAsBytes()))
+		d.d.onerror(err)
 	case 1:
 		f1, f2 := math.Modf(d.DecodeFloat64())
 		t = time.Unix(int64(f1), int64(f2*1e9))
@@ -681,7 +676,7 @@ func (d *cborDecDriver) DecodeExt(rv interface{}, xtag uint64, ext Ext) {
 		d.d.errorf("Wrong extension tag. Got %b. Expecting: %v", realxtag, xtag)
 	} else if ext == SelfExt {
 		rv2 := baseRV(rv)
-		d.d.decodeValue(rv2, d.h.fnNoExt(rv2.Type()))
+		d.d.decodeValue(rv2, d.h.fnNoExt(rvType(rv2)))
 	} else {
 		d.d.interfaceExtConvertAndDecode(rv, ext)
 	}
@@ -914,8 +909,6 @@ type CborHandle struct {
 	//
 	// Furthermore, this allows the skipping over of the Self Describing Tag 0xd9d9f7.
 	SkipUnexpectedTags bool
-
-	_ [7]uint64 // padding (cache-aligned)
 }
 
 // Name returns the name of the handle: cbor

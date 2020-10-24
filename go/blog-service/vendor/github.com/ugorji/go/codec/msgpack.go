@@ -171,7 +171,6 @@ type msgpackEncDriver struct {
 	encDriverNoopContainerWriter
 	h *MsgpackHandle
 	x [8]byte
-	_ [6]uint64 // padding
 	e Encoder
 }
 
@@ -292,7 +291,7 @@ func (e *msgpackEncDriver) EncodeTime(t time.Time) {
 func (e *msgpackEncDriver) EncodeExt(v interface{}, xtag uint64, ext Ext) {
 	var bs []byte
 	if ext == SelfExt {
-		bs = e.e.blist.get(1024)[:0]
+		bs = e.e.blist.get(1024)
 		e.e.sideEncode(v, &bs)
 	} else {
 		bs = ext.WriteExt(v)
@@ -406,7 +405,7 @@ type msgpackDecDriver struct {
 	bdRead bool
 	_      bool
 	noBuiltInTypes
-	_ [6]uint64 // padding
+	// _ [6]uint64 // padding
 	d Decoder
 }
 
@@ -830,9 +829,13 @@ func (d *msgpackDecDriver) advanceNil() (null bool) {
 	}
 	if d.bd == mpNil {
 		d.bdRead = false
-		null = true
+		return true // null = true
 	}
 	return
+}
+
+func (d *msgpackDecDriver) TryNil() (v bool) {
+	return d.advanceNil()
 }
 
 func (d *msgpackDecDriver) ContainerType() (vt valueType) {
@@ -857,10 +860,6 @@ func (d *msgpackDecDriver) ContainerType() (vt valueType) {
 		return valueTypeMap
 	}
 	return valueTypeUnset
-}
-
-func (d *msgpackDecDriver) TryNil() (v bool) {
-	return d.advanceNil()
 }
 
 func (d *msgpackDecDriver) readContainerLen(ct msgpackContainerType) (clen int) {
@@ -948,7 +947,6 @@ func (d *msgpackDecDriver) DecodeTime() (t time.Time) {
 }
 
 func (d *msgpackDecDriver) decodeTime(clen int) (t time.Time) {
-	// bs = d.d.decRd.readx(clen)
 	d.bdRead = false
 	switch clen {
 	case 4:
@@ -1035,8 +1033,6 @@ type MsgpackHandle struct {
 
 	// PositiveIntUnsigned says to encode positive integers as unsigned.
 	PositiveIntUnsigned bool
-
-	_ [7]uint64 // padding (cache-aligned)
 }
 
 // Name returns the name of the handle: msgpack

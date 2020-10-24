@@ -5,6 +5,8 @@ import (
 	"net/http"
 	"time"
 
+	"go.uber.org/zap"
+
 	"github.com/GordonChen13/learn-examples/go/blog-service/internal/model"
 
 	"github.com/gin-gonic/gin"
@@ -23,8 +25,15 @@ func init() {
 	if err != nil {
 		log.Fatalf("init setupDBEngine err: %s", err)
 	}
+	err = setupLogger()
+	if err != nil {
+		log.Fatalf("init setupDBEngine err: %s", err)
+	}
 }
 
+// @title 博客系统
+// @version 1.0
+// @description Go learning blog
 func main() {
 	gin.SetMode(global.ServerSetting.RunMode)
 	router := routers.NewRouter()
@@ -64,6 +73,19 @@ func setupSetting() error {
 func setupDBEngine() error {
 	var err error
 	global.DBEngine, err = model.NewDBEngine(global.DatabaseSetting)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func setupLogger() error {
+	var err error
+	if global.ServerSetting.RunMode == "debug" {
+		global.Logger, err = zap.NewDevelopment()
+	} else {
+		global.Logger, err = zap.NewProduction()
+	}
 	if err != nil {
 		return err
 	}
