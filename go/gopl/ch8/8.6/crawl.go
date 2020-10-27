@@ -43,7 +43,7 @@ func main() {
 	flag.IntVar(&maxDepth, "d", 3, "max crawl depth")
 	flag.Parse()
 	wg := &sync.WaitGroup{}
-	for _, link := range flag.Args() {
+	for _, link := range []string{"http://news.baidu.com", "http://music.qq.com"} {
 		wg.Add(1)
 		go crawl(link, 0, wg)
 	}
