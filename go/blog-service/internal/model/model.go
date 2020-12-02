@@ -10,13 +10,9 @@ import (
 )
 
 type Model struct {
-	Id         uint32 `gorm:"primary_key" json:"id"`
-	CreatedBy  string `json:"created_by"`
-	ModifiedBy string `json:"modified_by"`
-	CreatedOn  uint32 `json:"created_on"`
-	ModifiedOn uint32 `json:"modified_on"`
-	DeletedOn  uint32 `json:"deleted_on"`
-	IsDel      uint8  `json:"is_del"`
+	*gorm.Model
+	CreatedBy string `gorm:"type:VARCHAR(32) DEFAULT '' COMMENT '创建人'"`
+	UpdatedBy string `gorm:"type:VARCHAR(32) DEFAULT '' COMMENT '更新人'"`
 }
 
 func NewDBEngine(databaseSetting *setting.DatabaseSettingS) (*gorm.DB, error) {

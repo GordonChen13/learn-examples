@@ -37,7 +37,7 @@ type Statement struct {
 	Schema               *schema.Schema
 	Context              context.Context
 	RaiseErrorOnNotFound bool
-	UpdatingColumn       bool
+	SkipHooks            bool
 	SQL                  strings.Builder
 	Vars                 []interface{}
 	CurDestIndex         int
@@ -190,7 +190,7 @@ func (stmt *Statement) AddVar(writer clause.Writer, vars ...interface{}) {
 				writer.WriteString("(NULL)")
 			}
 		case *DB:
-			subdb := v.Session(&Session{Logger: logger.Discard, DryRun: true, WithConditions: true}).getInstance()
+			subdb := v.Session(&Session{Logger: logger.Discard, DryRun: true}).getInstance()
 			subdb.Statement.Vars = append(subdb.Statement.Vars, stmt.Vars...)
 			subdb.callbacks.Query().Execute(subdb)
 			writer.WriteString(subdb.Statement.SQL.String())
@@ -239,12 +239,12 @@ func (stmt *Statement) AddClauseIfNotExists(v clause.Interface) {
 }
 
 // BuildCondition build condition
-func (stmt *Statement) BuildCondition(query interface{}, args ...interface{}) (conds []clause.Expression) {
+func (stmt *Statement) BuildCondition(query interface{}, args ...interface{}) []clause.Expression {
 	if s, ok := query.(string); ok {
 		// if it is a number, then treats it as primary key
 		if _, err := strconv.Atoi(s); err != nil {
 			if s == "" && len(args) == 0 {
-				return
+				return nil
 			} else if len(args) == 0 || (len(args) > 0 && strings.Contains(s, "?")) {
 				// looks like a where condition
 				return []clause.Expression{clause.Expr{SQL: s, Vars: args}}
@@ -257,6 +257,7 @@ func (stmt *Statement) BuildCondition(query interface{}, args ...interface{}) (c
 		}
 	}
 
+	conds := make([]clause.Expression, 0, 4)
 	args = append([]interface{}{query}, args...)
 	for _, arg := range args {
 		if valuer, ok := arg.(driver.Valuer); ok {
@@ -358,7 +359,7 @@ func (stmt *Statement) BuildCondition(query interface{}, args ...interface{}) (c
 						if len(values) > 0 {
 							conds = append(conds, clause.IN{Column: clause.PrimaryColumn, Values: values})
 						}
-						return
+						return conds
 					}
 				}
 
@@ -367,7 +368,7 @@ func (stmt *Statement) BuildCondition(query interface{}, args ...interface{}) (c
 		}
 	}
 
-	return
+	return conds
 }
 
 // Build build sql with clauses names
@@ -408,6 +409,7 @@ func (stmt *Statement) clone() *Statement {
 		TableExpr:            stmt.TableExpr,
 		Table:                stmt.Table,
 		Model:                stmt.Model,
+		Unscoped:             stmt.Unscoped,
 		Dest:                 stmt.Dest,
 		ReflectValue:         stmt.ReflectValue,
 		Clauses:              map[string]clause.Clause{},
@@ -419,6 +421,7 @@ func (stmt *Statement) clone() *Statement {
 		Schema:               stmt.Schema,
 		Context:              stmt.Context,
 		RaiseErrorOnNotFound: stmt.RaiseErrorOnNotFound,
+		SkipHooks:            stmt.SkipHooks,
 	}
 
 	for k, c := range stmt.Clauses {
@@ -449,6 +452,27 @@ func (stmt *Statement) SetColumn(name string, value interface{}) {
 		v[name] = value
 	} else if stmt.Schema != nil {
 		if field := stmt.Schema.LookUpField(name); field != nil {
+			destValue := reflect.ValueOf(stmt.Dest)
+			for destValue.Kind() == reflect.Ptr {
+				destValue = destValue.Elem()
+			}
+
+			if stmt.ReflectValue != destValue {
+				if !destValue.CanAddr() {
+					destValueCanAddr := reflect.New(destValue.Type())
+					destValueCanAddr.Elem().Set(destValue)
+					stmt.Dest = destValueCanAddr.Interface()
+					destValue = destValueCanAddr.Elem()
+				}
+
+				switch destValue.Kind() {
+				case reflect.Struct:
+					field.Set(destValue, value)
+				default:
+					stmt.AddError(ErrInvalidData)
+				}
+			}
+
 			switch stmt.ReflectValue.Kind() {
 			case reflect.Slice, reflect.Array:
 				field.Set(stmt.ReflectValue.Index(stmt.CurDestIndex), value)
@@ -465,11 +489,7 @@ func (stmt *Statement) SetColumn(name string, value interface{}) {
 
 // Changed check model changed or not when updating
 func (stmt *Statement) Changed(fields ...string) bool {
-	modelValue := reflect.ValueOf(stmt.Model)
-	for modelValue.Kind() == reflect.Ptr {
-		modelValue = modelValue.Elem()
-	}
-
+	modelValue := stmt.ReflectValue
 	switch modelValue.Kind() {
 	case reflect.Slice, reflect.Array:
 		modelValue = stmt.ReflectValue.Index(stmt.CurDestIndex)
@@ -486,8 +506,13 @@ func (stmt *Statement) Changed(fields ...string) bool {
 					return !utils.AssertEqual(fv, fieldValue)
 				}
 			} else {
-				changedValue, _ := field.ValueOf(stmt.ReflectValue)
-				return !utils.AssertEqual(changedValue, fieldValue)
+				destValue := reflect.ValueOf(stmt.Dest)
+				for destValue.Kind() == reflect.Ptr {
+					destValue = destValue.Elem()
+				}
+
+				changedValue, zero := field.ValueOf(destValue)
+				return !zero && !utils.AssertEqual(changedValue, fieldValue)
 			}
 		}
 		return false
