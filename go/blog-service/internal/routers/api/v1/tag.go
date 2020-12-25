@@ -1,6 +1,13 @@
 package v1
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/GordonChen13/learn-examples/go/blog-service/global"
+	"github.com/GordonChen13/learn-examples/go/blog-service/internal/service"
+	"github.com/GordonChen13/learn-examples/go/blog-service/pkg/app"
+	"github.com/GordonChen13/learn-examples/go/blog-service/pkg/errcode"
+	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
+)
 
 type Tag struct{}
 
@@ -19,7 +26,14 @@ func NewTag() Tag {
 // @Failure 500 {object} errcode.Error "内部错误"
 // @Router /api/v1/tags [get]
 func (t Tag) List(c *gin.Context) {
-
+	res := app.NewResponse(c)
+	inValid, errs := app.BindAndValid(c, &service.TagListRequest{})
+	if inValid {
+		global.Logger.Error("Tag List", zap.Strings("errs", errs.Errors()))
+		res.ToErrorResponse(errcode.InvalidParams.WithDetails(errs.Errors()...))
+	}
+	res.ToResponse(gin.H{})
+	return
 }
 
 // @Summary 新增标签
