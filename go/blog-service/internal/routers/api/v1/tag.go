@@ -26,13 +26,31 @@ func NewTag() Tag {
 // @Failure 500 {object} errcode.Error "内部错误"
 // @Router /api/v1/tags [get]
 func (t Tag) List(c *gin.Context) {
+	param := service.TagListRequest{}
 	res := app.NewResponse(c)
-	inValid, errs := app.BindAndValid(c, &service.TagListRequest{})
-	if inValid {
+	valid, errs := app.BindAndValid(c, &param)
+	if !valid {
 		global.Logger.Error("Tag List", zap.Strings("errs", errs.Errors()))
 		res.ToErrorResponse(errcode.InvalidParams.WithDetails(errs.Errors()...))
 	}
-	res.ToResponse(gin.H{})
+
+	svc := service.New(c.Request.Context())
+	pager := app.Pager{Page: app.GetPage(c), PageSize: app.GetPageSize(c)}
+	total, err := svc.CountTag(&service.CountTagRequest{Name: param.Name, State: param.State})
+	if err != nil {
+		global.Logger.Error("svc.CountTag", zap.String("err", err.Error()))
+		res.ToResponse(errcode.ErrorCountTagFail)
+		return
+	}
+
+	tags, err := svc.GetTagList(&param, &pager)
+	if err != nil {
+		global.Logger.Error("svc.GetTagList", zap.String("err", err.Error()))
+		res.ToResponse(errcode.ErrorGetTagListFail)
+		return
+	}
+
+	res.ToResponseList(tags, total)
 	return
 }
 
