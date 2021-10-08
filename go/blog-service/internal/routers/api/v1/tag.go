@@ -58,13 +58,30 @@ func (t Tag) List(c *gin.Context) {
 // @Produce json
 // @Param name body string true "标签名称" minlength(3) maxlength(100)
 // @Param state body int false "状态" Enums(0,1) default(1)
-// @Param created_by body string false "创建者" minlength(3) maxlength(100)
+// @Param created_by body string true "创建者" minlength(3) maxlength(100)
 // @Success 200 {object} model.Tag "成功"
 // @Failure 400 {object} errcode.Error "请求错误"
 // @Failure 500 {object} errcode.Error "内部错误"
 // @Router /api/v1/tags [post]
 func (t Tag) Create(c *gin.Context) {
+	param := service.CreateTagRequest{}
+	res := app.NewResponse(c)
+	valid, errs := app.BindAndValid(c, &param)
+	if !valid {
+		global.Logger.Error("Tag Create app.BindAndValid(c, &param)", zap.Any("param", param), zap.Strings("errs", errs.Errors()))
+		res.ToErrorResponse(errcode.InvalidParams.WithDetails(errs.Errors()...))
+		return
+	}
+	svc := service.New(c.Request.Context())
+	err := svc.CreateTag(&param)
+	if err != nil {
+		global.Logger.Error("Tag Create svc.CreateTag(&param)", zap.Any("param", param), zap.Strings("errs", errs.Errors()))
+		res.ToErrorResponse(errcode.InvalidParams.WithDetails(errs.Errors()...))
+		return
+	}
 
+	res.ToResponse(gin.H{})
+	return
 }
 
 // @Summary 更新标签
