@@ -135,3 +135,135 @@ func TestSingleNumber(t *testing.T) {
 		}
 	}
 }
+
+func TestIntersect(t *testing.T) {
+	cs := []struct{
+		Input1 []int
+		Input2 []int
+		Expect []int
+	} {
+		{
+			Input1:[]int{1,2,2,1},
+			Input2:[]int{2,2},
+			Expect: []int{2,2},
+		},
+		{
+			Input1:[]int{4,9,5},
+			Input2:[]int{9,4,9,8,4},
+			Expect: []int{4,9},
+		},
+		{
+			Input1:[]int{1,3,8,9,3},
+			Input2:[]int{1, 0},
+			Expect: []int{1},
+		},
+	}
+
+	for _, c := range cs {
+		actual := Intersect(c.Input1, c.Input2)
+		if !IsArrayEqual(actual, c.Expect) {
+			t.Errorf("输出不符合预期，输入: %v, %v, 预期输出: %v, 实际输出: %v", c.Input1, c.Input2, c.Expect, actual)
+		}
+	}
+}
+
+func TestPlusOne(t *testing.T) {
+	cs := []struct{
+		Input  []int
+		Expect []int
+	} {
+		{
+			Input:  []int{1,2,3},
+			Expect: []int{1,2,4},
+		},
+		{
+			Input:  []int{4,3,2,1},
+			Expect: []int{4,3,2,2},
+		},
+		{
+			Input:  []int{0},
+			Expect: []int{1},
+		},
+		{
+			Input:  []int{9,9,9},
+			Expect: []int{1,0,0,0},
+		},
+	}
+
+	for _, c := range cs {
+		actual := PlusOne(c.Input)
+		if !IsArrayEqual(actual, c.Expect) {
+			t.Errorf("输出不符合预期，输入: %v, 预期输出: %v, 实际输出: %v", c.Input, c.Expect, actual)
+		}
+	}
+}
+
+func TestMoveZeroes(t *testing.T) {
+	cs := []struct{
+		Input  []int
+		Expect []int
+	} {
+		{
+			Input:  []int{0,1,0,3,12},
+			Expect: []int{1,3,12,0,0},
+		},
+		{
+			Input:  []int{0},
+			Expect: []int{0},
+		},
+		{
+			Input:  []int{0,1,0,0},
+			Expect: []int{1,0,0,0},
+		},
+		{
+			Input:  []int{0,0,1},
+			Expect: []int{1,0,0},
+		},
+		{
+			Input:  []int{1,0,1},
+			Expect: []int{1,1,0},
+		},
+		{
+			Input:  []int{0,0,0,0},
+			Expect: []int{0,0,0,0},
+		},
+	}
+
+	for _, c := range cs {
+		MoveZeroes(c.Input)
+		if !IsArrayEqual(c.Input, c.Expect) {
+			t.Errorf("输出不符合预期，预期输出: %v, 实际输出: %v", c.Expect, c.Input)
+		}
+	}
+}
+
+func TestTwoSum(t *testing.T) {
+	cs := []struct{
+		Nums   []int
+		Target int
+		Expect []int
+	} {
+		{
+			Nums:   []int{2,7,11,15},
+			Target: 9,
+			Expect: []int{0,1},
+		},
+		{
+			Nums:   []int{3,2,4},
+			Target: 6,
+			Expect: []int{1,2},
+		},
+		{
+			Nums:   []int{3,3},
+			Target: 6,
+			Expect: []int{0,1},
+		},
+	}
+
+	for _, c := range cs {
+		actual := TwoSum(c.Nums, c.Target)
+		if !IsArrayEqual(actual, c.Expect) {
+			t.Errorf("输出不符合预期，输入: %v, %v, 预期输出: %v, 实际输出: %v", c.Nums, c.Target, c.Expect, actual)
+		}
+	}
+}

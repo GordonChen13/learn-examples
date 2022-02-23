@@ -1,5 +1,7 @@
 package easy
 
+import "sort"
+
 // RemoveDuplicates 删除排序数组中的重复项
 // @see https://leetcode-cn.com/leetbook/read/top-interview-questions-easy/x2gy9m/
 func RemoveDuplicates(nums []int) ([]int, int) {
@@ -64,4 +66,75 @@ func SingleNumber(nums []int) int {
 		result = result  ^ n
 	}
 	return result
+}
+
+// Intersect 两个数组的交集
+// @see https://leetcode-cn.com/leetbook/read/top-interview-questions-easy/x2y0c2/
+func Intersect(nums1, nums2 []int) []int {
+	sort.Ints(nums1)
+	sort.Ints(nums2)
+	var result []int
+	var i, j int
+	for i < len(nums1) && j < len(nums2) {
+		if nums1[i] == nums2[j] {
+			result = append(result, nums1[i])
+			i++
+			j++
+		} else if nums1[i] < nums2[j] {
+			i++
+		} else {
+			j++
+		}
+	}
+
+	return result
+}
+
+// PlusOne 加一
+// @see https://leetcode-cn.com/leetbook/read/top-interview-questions-easy/x2cv1c/
+func PlusOne(nums []int) []int {
+	for i := len(nums)-1; i >= 0; i-- {
+		if nums[i] != 9 {
+			nums[i] = nums[i] + 1
+			return nums
+		} else {
+			nums[i] = 0
+		}
+	}
+
+	var result []int
+	result = append(result, 1)
+	for _, num := range nums {
+		result = append(result, num)
+	}
+
+	return result
+}
+
+// MoveZeroes 移动零
+// @see https://leetcode-cn.com/leetbook/read/top-interview-questions-easy/x2ba4i/
+func MoveZeroes(nums []int) {
+	left, right, n := 0, 0, len(nums)
+	for right < n {
+		if nums[right] != 0 {
+			nums[left], nums[right] = nums[right], nums[left]
+			left++
+		}
+		right++
+	}
+}
+
+// TwoSum 两数之和
+// @see https://leetcode-cn.com/leetbook/read/top-interview-questions-easy/x2jrse/
+func TwoSum(nums []int, target int) []int {
+	m := make(map[int]int)
+	for i, v := range nums {
+		m[v] = i
+		another := target - v
+		j, ok := m[another]
+		if ok {
+			return []int{j,i}
+		}
+	}
+	return []int{}
 }
