@@ -1,6 +1,8 @@
 package easy
 
-import "sort"
+import (
+	"sort"
+)
 
 // RemoveDuplicates 删除排序数组中的重复项
 // @see https://leetcode-cn.com/leetbook/read/top-interview-questions-easy/x2gy9m/
@@ -128,13 +130,39 @@ func MoveZeroes(nums []int) {
 // @see https://leetcode-cn.com/leetbook/read/top-interview-questions-easy/x2jrse/
 func TwoSum(nums []int, target int) []int {
 	m := make(map[int]int)
+	var j int
+	var ok bool
 	for i, v := range nums {
-		m[v] = i
-		another := target - v
-		j, ok := m[another]
+		j, ok = m[target - v]
 		if ok {
 			return []int{j,i}
 		}
+		m[v] = i
 	}
 	return []int{}
+}
+
+// IsValidSudoku 有效的数独
+// @see https://leetcode-cn.com/leetbook/read/top-interview-questions-easy/x2f9gg/
+func IsValidSudoku(board [][]byte) bool {
+	var rowCount, colCount [9][9]int
+	var subboxes [3][3][9]int
+
+	for i, nums := range board {
+		for j, numB := range nums {
+			if numB == '.' {
+				continue
+			}
+			num := numB - '1'
+			rowCount[i][num]++
+			colCount[j][num]++
+
+			subboxes[i/3][j/3][num]++
+
+			if rowCount[i][num] > 1 || colCount[j][num] > 1 || subboxes[i/3][j/3][num] > 1{
+				return false
+			}
+		}
+	}
+	return true
 }
