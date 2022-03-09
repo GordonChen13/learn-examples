@@ -166,3 +166,28 @@ func IsValidSudoku(board [][]byte) bool {
 	}
 	return true
 }
+
+// RotateMatrix 旋转图像
+// @see https://leetcode-cn.com/leetbook/read/top-interview-questions-easy/xnhhkv/
+func RotateMatrix(matrix [][]int)  {
+	l := len(matrix)
+	// 横轴中间对换
+	for i := 0; i < l/2; i++ {
+		j := l-i-1
+		temp := matrix[i]
+		matrix[i] = matrix[j]
+		matrix[j] = temp
+	}
+
+	// 斜线对换
+	for i := 0; i < l; i++ {
+		for j := 0; j < i; j++ {
+			if i == j {
+				continue
+			}
+			temp := matrix[i][j]
+			matrix[i][j] = matrix[j][i]
+			matrix[j][i] = temp
+		}
+	}
+}

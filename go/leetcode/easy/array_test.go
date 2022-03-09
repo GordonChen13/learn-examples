@@ -324,3 +324,48 @@ func TestIsValidSudoku(t *testing.T) {
 		}
 	}
 }
+
+func TestRotateMatrix(t *testing.T) {
+	cs := []struct {
+		Input  [][]int
+		Expect [][]int
+	}{
+		{
+			Input: [][]int{
+				{1, 2, 3},
+				{4, 5, 6},
+				{7, 8, 9},
+			},
+			Expect: [][]int{
+				{7, 4, 1},
+				{8, 5, 2},
+				{9, 6, 3},
+			},
+		},
+		{
+			Input: [][]int{
+				{5,1,9,11},
+				{2,4,8,10},
+				{13,3,6,7},
+				{15,14,12,16},
+			},
+			Expect: [][]int{
+				{15,13,2,5},
+				{14,3,4,1},
+				{12,6,8,9},
+				{16,7,10,11},
+			},
+		},
+	}
+
+	for _, c := range cs {
+		RotateMatrix(c.Input)
+		for i, nums := range c.Input {
+			for j, num := range nums {
+				if num != c.Expect[i][j] {
+					t.Fatalf("与预期结果不符，实际返回: %v, 预期返回: %v", c.Input, c.Expect)
+				}
+			}
+		}
+	}
+}
