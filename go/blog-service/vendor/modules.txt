@@ -134,31 +134,31 @@ go.uber.org/zap/internal/bufferpool
 go.uber.org/zap/internal/color
 go.uber.org/zap/internal/exit
 go.uber.org/zap/zapcore
-# golang.org/x/crypto v0.0.0-20201124201722-c8d3bf9c5392
-## explicit
+# golang.org/x/crypto v0.0.0-20210921155107-089bfa567519
 golang.org/x/crypto/sha3
-# golang.org/x/net v0.0.0-20201202161906-c7110b5ffcbb
+# golang.org/x/net v0.7.0
 ## explicit
 golang.org/x/net/idna
 golang.org/x/net/webdav
 golang.org/x/net/webdav/internal/xml
-# golang.org/x/sys v0.0.0-20201201145000-ef89a241ccb3
-## explicit
+# golang.org/x/sys v0.5.0
 golang.org/x/sys/cpu
-golang.org/x/sys/internal/unsafeheader
+golang.org/x/sys/execabs
 golang.org/x/sys/unix
-# golang.org/x/text v0.3.4
+# golang.org/x/text v0.7.0
 golang.org/x/text/secure/bidirule
 golang.org/x/text/transform
 golang.org/x/text/unicode/bidi
 golang.org/x/text/unicode/norm
 golang.org/x/text/width
-# golang.org/x/tools v0.0.0-20201202100533-7534955ac86b
-## explicit
+# golang.org/x/tools v0.1.12
 golang.org/x/tools/go/ast/astutil
 golang.org/x/tools/go/buildutil
 golang.org/x/tools/go/internal/cgo
 golang.org/x/tools/go/loader
+golang.org/x/tools/internal/typeparams
+# golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1
+## explicit
 # google.golang.org/protobuf v1.25.0
 ## explicit
 google.golang.org/protobuf/encoding/prototext
